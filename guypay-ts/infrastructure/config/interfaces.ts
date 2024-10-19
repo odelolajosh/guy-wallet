@@ -1,12 +1,15 @@
-import { z } from 'zod';
-import { OAuthProvider } from '../services/oauth/oauth-factory';
+import { z } from "zod";
 
 /**
  * Interfaces the configuration object for the application
  */
 export interface IConfiguration {
+  /**
+   * Gets a configuration value by key
+   * @param key - The key to get
+   * @returns The configuration value
+   */
   get<K extends keyof ConfigurationObject>(key: K): ConfigurationObject[K];
-  getOAuthClientId(provider: OAuthProvider): string;
 }
 
 export const configurationSchema = z.object({

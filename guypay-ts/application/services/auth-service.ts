@@ -114,12 +114,12 @@ export class AuthService implements IAuthService {
   }
 
   async generateOAuthURL(providerId: OAuthProvider): Promise<string> {
-    const provider = OAuthFactory.create(providerId, this.configuration.getOAuthClientId(providerId));
+    const provider = OAuthFactory.create(providerId, this.configuration);
     return provider.generateURL("guy-pay");
   }
 
   async loginWithOAuth(providerId: OAuthProvider, code: string, state: string): Promise<User> {
-    const provider = OAuthFactory.create(providerId, this.configuration.getOAuthClientId(providerId));
+    const provider = OAuthFactory.create(providerId, this.configuration);
     const { id, email } = await provider.authenticate(code);
 
     // TODO: Find a better way to verify the state (which should be unique and dynamic)

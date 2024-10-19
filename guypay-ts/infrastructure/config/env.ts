@@ -41,13 +41,4 @@ export class EnvConfiguration implements IConfiguration {
     }
     return this.configuration[key];
   }
-
-  getOAuthClientId(provider: string) {
-    switch (provider) {
-      case 'google':
-        return this.get('GOOGLE_CLIENT_ID');
-      default:
-        throw new Error(`Unsupported OAuth provider: ${provider}`);
-    }
-  }
 }
