@@ -1,6 +1,6 @@
 import express from "express";
 import { handleError } from "./middlewares/error";
-import { createRoute as createRoutes } from "./routes";
+import { createRoutes } from "./routes";
 
 export const app = express();
 

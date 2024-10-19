@@ -45,7 +45,20 @@ export interface IAuthService {
    */
   verifyAccessToken(token: string): Promise<User | null>;
 
+  /**
+   * Generates an OAuth URL for a provider
+   * @param provider - The OAuth provider
+   * @returns The OAuth URL
+   */
   generateOAuthURL(provider: OAuthProvider): Promise<string>;
+
+  /**
+   * Logs in a user with OAuth
+   * @param provider - The OAuth provider
+   * @param code - The OAuth code
+   * @param state - The OAuth state
+   * @returns The user
+   */
   loginWithOAuth(provider: OAuthProvider, code: string, state: string): Promise<User>;
 }
 
@@ -109,6 +122,7 @@ export class AuthService implements IAuthService {
     const provider = OAuthFactory.create(providerId, this.configuration.getOAuthClientId(providerId));
     const { id, email } = await provider.authenticate(code);
 
+    // TODO: Find a better way to verify the state (which should be unique and dynamic)
     if (state !== "guy-pay") {
       throw new InvalidOrExpiredOAuthError();
     }

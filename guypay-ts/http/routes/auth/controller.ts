@@ -55,7 +55,7 @@ export class AuthController {
   /**
    * Generate URL for Google OAuth
    */
-  async generateGoogleOauthURL(request: Request, response: Response) {
+  async generateGoogleOAuthURL(request: Request, response: Response) {
     const url = this.authService.generateOAuthURL('google')
     response.status(200).json({ url })
   }

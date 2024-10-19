@@ -4,7 +4,7 @@ import { EnvConfiguration } from "@/infrastructure/config/env"
 import { TestUserRepository } from "@/tests/mocks/user-repository"
 import { authRoutes } from "./auth/route"
 
-export function createRoute() {
+export function createRoutes() {
   const router = Router()
 
   const configuration = new EnvConfiguration()

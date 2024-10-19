@@ -9,7 +9,7 @@ export function authRoutes(authService: IAuthService, userRepository: IUserRepos
 
   router.post("/login", controller.loginWithEmailAndPassword)
   router.post("/register", controller.loginWithEmailAndPassword)
-  router.post("/google", controller.generateGoogleOauthURL)
+  router.post("/google", controller.generateGoogleOAuthURL)
   router.post("/google/callback", controller.loginWithGoogle)
 
   return router
