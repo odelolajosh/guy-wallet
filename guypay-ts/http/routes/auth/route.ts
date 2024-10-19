@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { AuthController } from "../controllers/auth-controller";
+import { AuthController } from "./controller";
 import { IAuthService } from "@/application/services/auth-service";
-import { IUserRepository } from "@/domain/repository/user-repository";
+import { IUserRepository } from "@/domain/user/repository";
 
 export function authRoutes(authService: IAuthService, userRepository: IUserRepository) {
   const router = Router()

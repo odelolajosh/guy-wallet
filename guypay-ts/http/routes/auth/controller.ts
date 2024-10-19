@@ -1,7 +1,7 @@
 import { IAuthService } from "@/application/services/auth-service";
-import { IUserRepository } from "@/domain/repository/user-repository";
-import { LoginRequestDto, LoginResponseDto, OAuthRequestParams } from "../dtos/auth-dto";
-import { Request, Response } from "../types/http";
+import { IUserRepository } from "@/domain/user/repository";
+import { LoginRequestDto, LoginResponseDto, OAuthRequestParams } from "./dto";
+import { Request, Response } from "../../types/http";
 
 export class AuthController {
   constructor(private authService: IAuthService, private userRepository: IUserRepository) { }

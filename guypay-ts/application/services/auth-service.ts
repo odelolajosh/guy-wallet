@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { User } from "@/domain/model/user";
-import { IUserRepository } from "@/domain/repository/user-repository";
+import { User } from "@/domain/user/model";
+import { IUserRepository } from "@/domain/user/repository";
 import { IConfiguration } from "@/infrastructure/config/interfaces";
 import { EmailAlreadyExistError, InvalidEmailOrPasswordError, InvalidOrExpiredOAuthError, UserNotFoundError } from "../errors/auth-error";
 import { OAuthFactory, OAuthProvider } from "@/infrastructure/services/oauth/oauth-factory";

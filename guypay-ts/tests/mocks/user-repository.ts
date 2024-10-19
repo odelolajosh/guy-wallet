@@ -1,5 +1,5 @@
-import { User } from "@/domain/model/user";
-import { IUserRepository } from "@/domain/repository/user-repository";
+import { User } from "@/domain/user/model";
+import { IUserRepository } from "@/domain/user/repository";
 
 export class TestUserRepository implements IUserRepository {
   private users: User[] = [];
