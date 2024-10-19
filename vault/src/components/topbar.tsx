@@ -20,7 +20,7 @@ export const Topbar = () => {
   return (
     <nav className="sticky top-0 bg-background h-16 border-b border-border">
       <div className="max-w-8xl mx-auto h-full relative flex items-center px-4 lg:px-8">
-        <Link to="/" className="text-xl font-semibold text-primary">GDSC University of Lagos</Link>
+        <Link to="/" className="text-xl font-semibold text-primary">Guypay</Link>
 
         <div className="ml-auto flex items-center gap-6">
           <SwitchThemeButton />
