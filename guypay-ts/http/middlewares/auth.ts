@@ -22,7 +22,7 @@ export const requireAuth = (authService: IAuthService) => (
 
     const user = await authService.verifyAccessToken(token)
     if (!user) {
-      response.status(403).json({ message: 'Invalid or expired token' });
+      response.status(403).json({ message: "Invalid or expired token" });
       return
     }
 
