@@ -1,18 +1,26 @@
 import { IAuthService } from "@/application/services/auth-service";
-import { IUserRepository } from "@/domain/user/repository";
-import { LoginRequestDto, LoginResponseDto, OAuthRequestParams } from "./dto";
+import { LoginRequestDto, LoginResponseDto, OAuthRequestQuery } from "./dto";
 import { Request, Response } from "../../types/http";
+import { routeHandler } from "@/http/lib/route-handler";
 
 export class AuthController {
-  constructor(private authService: IAuthService, private userRepository: IUserRepository) { }
+  constructor(private authService: IAuthService) {
+    this.getMe = this.getMe.bind(this)
+    this.loginWithEmailAndPassword = this.loginWithEmailAndPassword.bind(this)
+    this.registerWithEmailAndPassword = this.registerWithEmailAndPassword.bind(this)
+    this.generateGoogleOAuthURL = this.generateGoogleOAuthURL.bind(this)
+    this.loginWithGoogle = this.loginWithGoogle.bind(this)
+  }
 
   /**
    * Get the current user
    */
+  @routeHandler
   async getMe(request: Request, response: Response) {
     const user = request.user
     if (!user) {
-      return response.status(404).json({ message: "User not found" })
+      response.status(404).json({ message: "User not found" })
+      return
     }
 
     response.status(200).json({
@@ -25,6 +33,7 @@ export class AuthController {
   /**
    * Login with email and password
    */
+  @routeHandler
   async loginWithEmailAndPassword(request: Request<LoginRequestDto>, response: Response<LoginResponseDto>) {
     const { email, password } = request.body
 
@@ -40,6 +49,7 @@ export class AuthController {
   /**
    * Register with email and password
    */
+  @routeHandler
   async registerWithEmailAndPassword(request: Request<LoginRequestDto>, response: Response<LoginResponseDto>) {
     const { email, password } = request.body
 
@@ -56,14 +66,14 @@ export class AuthController {
    * Generate URL for Google OAuth
    */
   async generateGoogleOAuthURL(request: Request, response: Response) {
-    const url = this.authService.generateOAuthURL('google')
+    const url = await this.authService.generateOAuthURL('google')
     response.status(200).json({ url })
   }
 
   /**
    * Login with Google OAuth
    */
-  async loginWithGoogle(request: Request<{}, OAuthRequestParams>, response: Response<LoginResponseDto>) {
+  async loginWithGoogle(request: Request<{}, OAuthRequestQuery>, response: Response<LoginResponseDto>) {
     const { code, state } = request.query
 
     const user = await this.authService.loginWithOAuth('google', code, state)
