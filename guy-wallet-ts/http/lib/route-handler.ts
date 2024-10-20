@@ -1,5 +1,8 @@
 import { Request, Response, NextFunction } from "../types/http";
 
+/**
+ * Decorates a route handler to ensure that any errors are caught and passed to the next middleware.
+ */
 export function routeHandler(
   _target: any,
   _propertyKey: string | symbol,

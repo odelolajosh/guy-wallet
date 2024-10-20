@@ -80,6 +80,7 @@ export class AuthController {
   /**
    * Generate URL for Google OAuth
    */
+  @routeHandler
   async generateGoogleOAuthURL(request: Request, response: Response) {
     const url = await this.authService.generateOAuthURL('google')
     response.status(200).json({ url })
@@ -88,6 +89,7 @@ export class AuthController {
   /**
    * Login with Google OAuth
    */
+  @routeHandler
   async loginWithGoogle(request: Request<{}, OAuthRequestQuery>, response: Response<LoginResponseDto>) {
     const { code, state } = request.query
 
