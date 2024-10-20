@@ -1,5 +1,5 @@
 import { IAuthService } from "@/application/services/auth-service";
-import { LoginRequestDto, LoginResponseDto, OAuthRequestQuery } from "./dto";
+import { LoginRequestDto, LoginResponseDto, OAuthRequestQuery, RegisterRequestDto, RegisterResponseDto } from "./dto";
 import { Request, Response } from "../../types/http";
 import { routeHandler } from "@/http/lib/route-handler";
 
@@ -50,10 +50,10 @@ export class AuthController {
    * Register with email and password
    */
   @routeHandler
-  async registerWithEmailAndPassword(request: Request<LoginRequestDto>, response: Response<LoginResponseDto>) {
-    const { email, password } = request.body
+  async registerWithEmailAndPassword(request: Request<RegisterRequestDto>, response: Response<RegisterResponseDto>) {
+    const { name, email, password } = request.body
 
-    const user = await this.authService.register(email, password)
+    const user = await this.authService.register(name, email, password)
     const tokens = await this.authService.generateTokens(user)
 
     response.status(201).json({

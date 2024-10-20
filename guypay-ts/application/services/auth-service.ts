@@ -17,11 +17,12 @@ interface AuthToken {
 export interface IAuthService {
   /**
    * Registers a new user
+   * @param name - The user's name
    * @param email - The user's email
    * @param password - The user's password
    * @returns The newly created user
    */
-  register(email: string, password: string): Promise<User>;
+  register(name: string, email: string, password: string): Promise<User>;
 
   /**
    * Logs in a user
@@ -69,14 +70,14 @@ export interface IAuthService {
 export class AuthService implements IAuthService {
   constructor(private configuration: IConfiguration, private userRepository: IUserRepository) { }
 
-  async register(email: string, password: string): Promise<User> {
+  async register(name: string, email: string, password: string): Promise<User> {
     const existingUser = await this.userRepository.findByEmail(email);
     if (existingUser) {
       throw new EmailAlreadyExistError()
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User('1', email, hashedPassword);
+    const newUser = new User('1', name, email, hashedPassword);
     await this.userRepository.save(newUser);
 
     return newUser;

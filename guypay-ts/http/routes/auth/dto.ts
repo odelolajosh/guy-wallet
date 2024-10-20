@@ -7,7 +7,13 @@ export const loginRequestDto = z.object({
 
 export type LoginRequestDto = z.infer<typeof loginRequestDto>;
 
-export type RegisterRequestDto = LoginRequestDto;
+export const registerRequestDto = z.object({
+  name: z.string(),
+  email: z.string().email(),
+  password: z.string().min(6),
+});
+
+export type RegisterRequestDto = z.infer<typeof registerRequestDto>;
 
 export const loginResponseDto = z.object({
   accessToken: z.string(),
