@@ -105,13 +105,17 @@ export class AuthService implements IAuthService {
   }
 
   async verifyAccessToken(token: string) {
-    const payload = jwt.verify(token, this.configuration.get("JWT_ACCESS_SECRET")) as jwt.JwtPayload
-    const userId = payload.sub;
-    if (!userId) {
+    try {
+      const payload = jwt.verify(token, this.configuration.get("JWT_ACCESS_SECRET")) as jwt.JwtPayload
+      const userId = payload.sub;
+      if (!userId) {
+        return null;
+      }
+
+      return this.userRepository.findById(userId);
+    } catch (error) {
       return null;
     }
-
-    return this.userRepository.findById(userId);
   }
 
   async generateOAuthURL(providerId: OAuthProvider): Promise<string> {

@@ -18,6 +18,12 @@ export type RegisterRequestDto = z.infer<typeof registerRequestDto>;
 export const loginResponseDto = z.object({
   accessToken: z.string(),
   refreshToken: z.string(),
+  user: z.object({
+    id: z.string(),
+    name: z.string(),
+    email: z.string(),
+    createdAt: z.string(),
+  }),
 });
 
 export type LoginResponseDto = z.infer<typeof loginResponseDto>;

@@ -1,9 +1,10 @@
 import axios from '@/lib/axios';
 
 export interface User {
-  id: number;
+  id: string;
   email: string;
   name: string;
+  createdAt: string;
 }
 
 /*
@@ -21,21 +22,15 @@ export interface User {
     */
 
 export interface UserResponse {
-  id: number
   user: {
     id: string
     email: string
-    first_name: string
-    last_name: string | null
+    name: string
+    createdAt: string
   }
-  picture: string | null
 }
 
 export const getMe = async (): Promise<User> => {
-  const response = (await axios.get('/auth/profile/')) as UserResponse;
-  return {
-    id: response.id,
-    email: response.user.email,
-    name: `${response.user.first_name}${response.user.last_name ? ` ${response.user.last_name}` : ''}`
-  };
+  const response = (await axios.get('/auth/me')) as UserResponse;
+  return response.user;
 };

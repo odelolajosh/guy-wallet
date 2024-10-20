@@ -24,10 +24,13 @@ export class AuthController {
     }
 
     response.status(200).json({
-      id: user.id,
-      email: user.email,
-      createdAt: user.createdAt
-    })
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        createdAt: user.createdAt
+      }
+    });
   }
 
   /**
@@ -43,6 +46,12 @@ export class AuthController {
     response.status(200).json({
       accessToken: tokens.accessToken,
       refreshToken: tokens.refreshToken,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        createdAt: new Date(user.createdAt).toISOString()
+      }
     })
   }
 
@@ -59,6 +68,12 @@ export class AuthController {
     response.status(201).json({
       accessToken: tokens.accessToken,
       refreshToken: tokens.refreshToken,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        createdAt: new Date(user.createdAt).toISOString()
+      }
     })
   }
 
@@ -78,6 +93,15 @@ export class AuthController {
 
     const user = await this.authService.loginWithOAuth('google', code, state)
     const tokens = await this.authService.generateTokens(user)
-    response.status(200).json(tokens)
+    response.status(200).json({
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        createdAt: new Date(user.createdAt).toISOString()
+      }
+    })
   }
 }

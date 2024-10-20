@@ -16,36 +16,28 @@ const userFn = async () => {
 
 const loginFn = async (credentials: LoginCredentialsDTO): Promise<User> => {
   const response = await loginWithEmailAndPassword(credentials);
-  const { access_token, refresh_token, user_data } = response.data
+  const { accessToken, refreshToken, user } = response;
 
   createSession({
-    accessToken: access_token,
-    refreshToken: refresh_token,
+    accessToken,
+    refreshToken,
     expiresAt: Date.now() + 60 * 60 * 1000
   })
 
-  return {
-    id: user_data.id,
-    email: user_data.email,
-    name: `${user_data.first_name}${user_data.last_name ? ` ${user_data.last_name}` : ''}`
-  };
+  return user;
 };
 
 const registerFn = async (credentials: RegisterCredentialsDTO): Promise<User> => {
   const response = await registerWithEmailAndPassword(credentials);
-  const { access_token, refresh_token, data } = response;
+  const { accessToken, refreshToken, user } = response;
   
   createSession({
-    accessToken: access_token,
-    refreshToken: refresh_token,
+    accessToken,
+    refreshToken,
     expiresAt: Date.now() + 60 * 60 * 1000
   })
 
-  return {
-    id: data.id,
-    email: data.email,
-    name: `${data.first_name}${data.last_name ? ` ${data.last_name}` : ''}`
-  };
+  return user;
 };
 
 const logoutFn = async () => {

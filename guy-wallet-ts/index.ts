@@ -1,6 +1,6 @@
 import { app } from "@/http/server";
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3300;
 
 function main() {
   app.listen(port, () => {
