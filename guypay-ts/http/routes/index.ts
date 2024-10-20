@@ -13,7 +13,7 @@ export function createRoutes() {
   const userRepository = new TestUserRepository()
   const authService = new AuthService(configuration, userRepository)
 
-  router.use("/auth", authRoutes(authService, userRepository))
+  router.use("/auth", authRoutes(authService))
 
   return router
 }

@@ -18,7 +18,9 @@ export type LoginResponseDto = z.infer<typeof loginResponseDto>;
 
 export type RegisterResponseDto = LoginResponseDto;
 
-export type OAuthRequestParams = {
-  code: string;
-  state: string;
-}
+export const oauthRequestQuery = z.object({
+  code: z.string(),
+  state: z.string(),
+});
+
+export type OAuthRequestQuery = z.infer<typeof oauthRequestQuery>;
