@@ -1,11 +1,11 @@
 {
-  "name": "back-vault",
+  "name": "guy-wallet",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "vitest",
-    "dev": "tsx index.ts",
+    "dev": "tsx watch --include 'src/**/*.ts' index.ts",
     "build": "tsc",
     "start": "node dist/index.js"
   },
@@ -19,6 +19,7 @@
     "google-auth-library": "^9.14.2",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
+    "pg": "^8.13.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
@@ -27,6 +28,7 @@
     "@types/express": "^5.0.0",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/morgan": "^1.9.9",
+    "@types/pg": "^8.11.10",
     "cors": "^2.8.5",
     "tsx": "^4.19.1",
     "typescript": "^5.6.3",
