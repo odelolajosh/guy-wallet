@@ -24,6 +24,13 @@ export const configurationSchema = z.object({
   
   // Google client
   GOOGLE_CLIENT_ID: z.string(),
+
+  // Database
+  DB_USER: z.string(),
+  DB_HOST: z.string(),
+  DB_NAME: z.string(),
+  DB_PASSWORD: z.string(),
+  DB_PORT: z.string(),
 })
 
 /**

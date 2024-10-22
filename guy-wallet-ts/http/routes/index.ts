@@ -1,16 +1,18 @@
 import { Router } from "express"
 import { AuthService } from "@/application/services/auth-service"
 import { EnvConfiguration } from "@/infrastructure/config/env"
-import { TestUserRepository } from "@/tests/mocks/user-repository"
 import { authRoutes } from "./auth/route"
+import { SqlUserRepository } from "@/infrastructure/database/sql/repository/SqlUserRepository"
+import { PostgresClient } from "@/infrastructure/database/sql/postgres"
 
 export function createRoutes() {
   const router = Router()
 
   const configuration = new EnvConfiguration()
 
-  // TODO: TestUserRepository is a mock
-  const userRepository = new TestUserRepository()
+  const sqlClient = new PostgresClient(configuration)
+  const userRepository = new SqlUserRepository(sqlClient)
+
   const authService = new AuthService(configuration, userRepository)
 
   router.use("/auth", authRoutes(authService))
