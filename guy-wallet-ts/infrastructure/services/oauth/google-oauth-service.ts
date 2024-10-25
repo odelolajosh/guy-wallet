@@ -1,5 +1,5 @@
 import { OAuth2Client } from "google-auth-library";
-import { IOAuth2Service } from "@/application/interfaces";
+import { IOAuth2Service } from "@/application/auth/interfaces";
 
 export class GoogleOAuthService implements IOAuth2Service {
   private readonly oauthClient: OAuth2Client;

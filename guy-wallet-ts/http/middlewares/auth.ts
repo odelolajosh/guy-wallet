@@ -1,4 +1,4 @@
-import { IAuthService } from "@/application/services/auth-service"
+import { IAuthService } from "@/application/auth/auth-service"
 import { NextFunction, Request, Response } from "express"
 
 /**

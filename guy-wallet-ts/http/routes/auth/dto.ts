@@ -1,21 +1,21 @@
 import { z } from 'zod';
 
-export const loginRequestDto = z.object({
+export const loginRequestSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
 });
 
-export type LoginRequestDto = z.infer<typeof loginRequestDto>;
+export type LoginRequestDto = z.infer<typeof loginRequestSchema>;
 
-export const registerRequestDto = z.object({
+export const registerRequestSchema = z.object({
   name: z.string(),
   email: z.string().email(),
   password: z.string().min(6),
 });
 
-export type RegisterRequestDto = z.infer<typeof registerRequestDto>;
+export type RegisterRequestDto = z.infer<typeof registerRequestSchema>;
 
-export const loginResponseDto = z.object({
+export const loginResponseSchema = z.object({
   accessToken: z.string(),
   refreshToken: z.string(),
   user: z.object({
@@ -26,13 +26,13 @@ export const loginResponseDto = z.object({
   }),
 });
 
-export type LoginResponseDto = z.infer<typeof loginResponseDto>;
+export type LoginResponseDto = z.infer<typeof loginResponseSchema>;
 
 export type RegisterResponseDto = LoginResponseDto;
 
-export const oauthRequestQuery = z.object({
+export const oauthRequestQuerySchema = z.object({
   code: z.string(),
   state: z.string(),
 });
 
-export type OAuthRequestQuery = z.infer<typeof oauthRequestQuery>;
+export type OAuthRequestQuery = z.infer<typeof oauthRequestQuerySchema>;

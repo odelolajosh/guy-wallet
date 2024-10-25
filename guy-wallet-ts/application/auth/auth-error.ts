@@ -1,4 +1,4 @@
-import { ApplicationError } from "./app-error"
+import { ApplicationError } from "../app-error"
 
 /**
  * Thrown when IAuthService's login is called with invalid credentials

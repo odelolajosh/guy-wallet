@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { ApplicationError } from "@/application/errors/app-error";
+import { ApplicationError } from "@/application/app-error";
 
 export function handleError(err: Error, request: Request, response: Response, next: NextFunction) {
   if (err instanceof ApplicationError) {

@@ -1,4 +1,4 @@
-import { IOAuth2Service } from "@/application/interfaces";
+import { IOAuth2Service } from "@/application/auth/interfaces";
 import { GoogleOAuthService } from "./google-oauth-service";
 import { IConfiguration } from "@/infrastructure/config/interfaces";
 

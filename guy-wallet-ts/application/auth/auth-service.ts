@@ -3,65 +3,9 @@ import jwt from "jsonwebtoken";
 import { User } from "@/domain/user/model";
 import { IUserRepository } from "@/domain/user/repository";
 import { IConfiguration } from "@/infrastructure/config/interfaces";
-import { EmailAlreadyExistError, InvalidEmailOrPasswordError, InvalidOrExpiredOAuthError, UserNotFoundError } from "../errors/auth-error";
+import { EmailAlreadyExistError, InvalidEmailOrPasswordError, InvalidOrExpiredOAuthError, UserNotFoundError } from "./auth-error";
 import { OAuthFactory, OAuthProvider } from "@/infrastructure/services/oauth/oauth-factory";
-
-interface AuthToken {
-  accessToken: string;
-  refreshToken: string;
-}
-
-/**
- * Defines the authentication service
- */
-export interface IAuthService {
-  /**
-   * Registers a new user
-   * @param name - The user's name
-   * @param email - The user's email
-   * @param password - The user's password
-   * @returns The newly created user
-   */
-  register(name: string, email: string, password: string): Promise<User>;
-
-  /**
-   * Logs in a user
-   * @param email - The user's email
-   * @param password - The user's password
-   * @returns The user
-   */
-  login(email: string, password: string): Promise<User>;
-
-  /**
-   * Generates an access token and a refresh token for a user
-   * @param user - The user
-   * @returns The auth tokens
-   */
-  generateTokens(user: User): Promise<AuthToken>;
-
-  /**
-   * Checks if an access token is valid
-   * @param token - Access token to verify
-   * @returns The user if the token is valid, null otherwise
-   */
-  verifyAccessToken(token: string): Promise<User | null>;
-
-  /**
-   * Generates an OAuth URL for a provider
-   * @param provider - The OAuth provider
-   * @returns The OAuth URL
-   */
-  generateOAuthURL(provider: OAuthProvider): Promise<string>;
-
-  /**
-   * Logs in a user with OAuth
-   * @param provider - The OAuth provider
-   * @param code - The OAuth code
-   * @param state - The OAuth state
-   * @returns The user
-   */
-  loginWithOAuth(provider: OAuthProvider, code: string, state: string): Promise<User>;
-}
+import { IAuthService } from "./interfaces";
 
 /**
  * An implementation of IAuthService
@@ -78,7 +22,7 @@ export class AuthService implements IAuthService {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User('1', name, email, hashedPassword);
-    await this.userRepository.save(newUser);
+    newUser.id = await this.userRepository.create(newUser);
 
     return newUser;
   }
@@ -97,7 +41,7 @@ export class AuthService implements IAuthService {
     return user;
   }
 
-  async generateTokens(user: User): Promise<AuthToken> {
+  async generateTokens(user: User) {
     return {
       accessToken: this.generateAccessToken(user.id),
       refreshToken: this.generateRefreshToken(user.id)

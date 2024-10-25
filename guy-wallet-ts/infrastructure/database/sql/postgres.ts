@@ -25,15 +25,16 @@ export class PostgresClient {
     });
   }
 
-  async query(query: string, params: any[] = []): Promise<any> {
+  async query(query: string, params: any[] = []) {
     const client = await this.pool.connect()
     try {
-      return await client.query(query, params)
+      const result = await client.query(query, params)
+      client.release()
+      return result
     } catch (error) {
+      client.release()
       console.error("Error executing query", error);
       throw error; // Re-throw error for upstream handling
-    } finally {
-      client.release()
     }
   } 
 }

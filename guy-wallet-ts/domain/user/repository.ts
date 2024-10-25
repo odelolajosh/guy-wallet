@@ -19,8 +19,16 @@ export interface IUserRepository {
   findById(id: string): Promise<User | null>;
 
   /**
-   * Saves a user
+   * Creates a new user
+   * Doesn't use the user id specified in the user object, but generates a new one
+   * @param user
+   * @returns {string} The user id
+   */
+  create(user: User): Promise<string>;
+
+  /**
+   * Updates a user
    * @param user
    */
-  save(user: User): Promise<void>;
+  update(user: User): Promise<void>;
 }
