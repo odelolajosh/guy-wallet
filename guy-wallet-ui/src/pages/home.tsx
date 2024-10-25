@@ -1,14 +1,32 @@
-import { useUser } from "@/lib/auth"
+import { ExpenseRatioCard } from "@/components/expense-ratio-card";
+import { ListOfSpendingCard } from "@/components/spending-list-card";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { WalletCard } from "@/components/wallet-card";
 
 export const Home = () => {
-  const { data: user } = useUser();
-
   return (
     <div>
-      <h1 className="text-3xl font-bold">Welcome! {user.name}</h1>
-      <p>
-        This is a Home page.
-      </p>
+      <section className="bg-neutral text-neutral-foreground px-6 py-4 pb-[120px] grid gap-4">
+        <header>
+          <SidebarTrigger />
+        </header>
+        <div>
+          <h1 className="text-2xl">Dashboard</h1>
+          <small className="text-muted-foreground text-sm">
+            Send and receive money the guy way.
+          </small>
+        </div>
+      </section>
+      <section className="-mt-[100px] grid gap-2 px-6">
+        <div className="grid lg:grid-cols-[1fr,2fr,1fr] gap-2">
+          <WalletCard />
+          <WalletCard />
+          <ExpenseRatioCard />
+        </div>
+        <div className="grid lg:grid-cols-[2fr,1fr] gap-2">
+          <ListOfSpendingCard />
+        </div>
+      </section>
     </div>
   )
 }
