@@ -1,4 +1,6 @@
+import { AppSidebar } from '@/components/app-sidebar';
 import { Fallback } from '@/components/fallback';
+import { SidebarProvider } from '@/components/ui/sidebar';
 import { AuthLoader } from '@/lib/auth';
 import { lazyImport } from '@/lib/lazy-import';
 import { Suspense } from 'react';
@@ -20,10 +22,16 @@ const Protected = ({ children }: { children: React.ReactNode }) => {
 
 const App = ({ children }: { children: React.ReactNode }) => {
   return (
-    <Suspense fallback={<Fallback className="min-h-screen" />}>
-      {children}
-      <ScrollRestoration />
-    </Suspense>
+    <SidebarProvider>
+      <AppSidebar />
+      <main className="w-full">
+        {/* <SidebarTrigger /> */}
+        <Suspense fallback={<Fallback className="min-h-screen" />}>
+          {children}
+          <ScrollRestoration />
+        </Suspense>
+      </main>
+    </SidebarProvider>
   );
 };
 
