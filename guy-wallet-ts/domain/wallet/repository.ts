@@ -1,3 +1,4 @@
+import { Money } from "../common/money";
 import { Wallet } from "./model";
 
 /**
@@ -17,6 +18,12 @@ export interface IWalletRepository {
   getByUserId(userId: string): Promise<Wallet[]>;
 
   /**
+   * Get the wallet by account number
+   * @param accountNumber The account number
+   */
+  getByAccountNumber(accountNumber: string): Promise<Wallet | null>;
+
+  /**
    * Create a new wallet
    * Doesn't use the wallet id specified in the wallet object, but generates a new one
    * @param wallet The wallet object
@@ -28,6 +35,20 @@ export interface IWalletRepository {
    * Update the wallet
    * @param wallet The wallet object
    */
-  update(wallet: Wallet): Promise<void>;
-}
+  update(wallet: Wallet): Promise<Wallet | null>;
 
+  /**
+   * Transfer money between wallets
+   * @param fromWalletId The wallet id to transfer from
+   * @param toWalletId The wallet id to transfer to
+   * @param amount The amount to transfer
+   */
+  transferMoney(fromWalletId: string, toWalletId: string, amount: Money): Promise<boolean>
+
+  /**
+   * Update the wallet balance
+   * @param walletId The wallet id
+   * @param amountChange The amount to change
+   */
+  updateBalance(walletId: string, amountChange: Money): Promise<boolean>
+}
