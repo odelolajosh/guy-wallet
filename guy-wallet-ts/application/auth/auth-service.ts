@@ -5,7 +5,7 @@ import { IUserRepository } from "@/domain/user/repository";
 import { IConfiguration } from "@/infrastructure/config/interfaces";
 import { EmailAlreadyExistError, InvalidEmailOrPasswordError, InvalidOrExpiredOAuthError, UserNotFoundError } from "./auth-error";
 import { OAuthFactory, OAuthProvider } from "@/infrastructure/services/oauth/oauth-factory";
-import { IAuthService } from "./interfaces";
+import { IAuthService } from "./auth-interface";
 
 /**
  * An implementation of IAuthService
