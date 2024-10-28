@@ -1,4 +1,4 @@
-import { IAuthService } from "@/application/auth/interfaces";
+import { IAuthService } from "@/application/auth/auth-interface";
 import { LoginRequestDto, LoginResponseDto, OAuthRequestQuery, RegisterRequestDto, RegisterResponseDto } from "./dto";
 import { Request, Response } from "../../types/http";
 import { routeHandler } from "@/http/lib/route-handler";

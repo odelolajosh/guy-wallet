@@ -1,4 +1,4 @@
-import { IWalletService } from "@/application/wallet/interfaces";
+import { IWalletService } from "@/application/wallet/wallet-interface";
 import { Router } from "express";
 import { WalletController } from "./controller";
 

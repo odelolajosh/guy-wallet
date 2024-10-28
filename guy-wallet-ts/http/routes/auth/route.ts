@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { AuthController } from "./controller";
-import { IAuthService } from "@/application/auth/interfaces";
+import { IAuthService } from "@/application/auth/auth-interface";
 import { requireBody, requireQuery } from "@/http/middlewares/validation";
 import { loginRequestSchema, oauthRequestQuerySchema, registerRequestSchema } from "./dto";
 import { requireAuth } from "@/http/middlewares/auth";
