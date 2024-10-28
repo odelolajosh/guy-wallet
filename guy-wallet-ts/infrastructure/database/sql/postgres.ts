@@ -34,7 +34,44 @@ export class PostgresClient {
     } catch (error) {
       client.release()
       console.error("Error executing query", error);
-      throw error; // Re-throw error for upstream handling
+      throw error;
     }
-  } 
+  }
+
+  async createTransactionClient() {
+    const client = await this.pool.connect()
+    return new PostgresTransactionClient(client)
+  }
+}
+
+export class PostgresTransactionClient {
+  private client: pg.PoolClient
+
+  constructor(client: pg.PoolClient) {
+    this.client = client
+  }
+
+  async begin() {
+    await this.client.query("BEGIN")
+  }
+
+  async query(query: string, params: any[] = []) {
+    try {
+      const result = await this.client.query(query, params)
+      return result
+    } catch (error) {
+      console.error("Error executing query", error);
+      throw error;
+    }
+  }
+
+  async commit() {
+    await this.client.query("COMMIT")
+    this.client.release()
+  }
+
+  async rollback() {
+    await this.client.query("ROLLBACK")
+    this.client.release()
+  }
 }
