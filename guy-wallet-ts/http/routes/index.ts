@@ -10,7 +10,7 @@ import { WalletService } from "@/application/wallet/wallet-service"
 import { GuyPaymentProvider } from "@/infrastructure/services/payment/guy-payment-provider"
 import { SqlPaymentRepository } from "@/infrastructure/database/sql/repository/sql-payment-repository"
 import { BullQueue } from "@/infrastructure/queue/bullmq/bull-queue"
-import { PaymentProcessor } from "@/application/payment/payment-processor"
+import { PaymentFinalizer, PaymentProcessor } from "@/application/payment/payment-processor"
 import { BullQueueWorker } from "@/infrastructure/queue/bullmq/bull-queue-worker"
 import { GuyPaymentService } from "@/infrastructure/services/payment/guy-payment-service"
 import { paymentRoutes } from "./payment/route"
@@ -30,21 +30,28 @@ export function createRoutes() {
   const paymentProviderService = new GuyPaymentService(configuration);
   const paymentProvider = new GuyPaymentProvider(configuration)
 
-  const paymentQueue = new BullQueue("payment")
-  const paymentProcessor = new PaymentProcessor(paymentProvider)
-  const paymentWorker = new BullQueueWorker("payment", paymentProcessor)
+  const paymentProcessingQueue = new BullQueue("payment-processor")
+  const paymentFinalizationQueue = new BullQueue("payment-finalizer")
+
+  const paymentProcessor = new PaymentProcessor(paymentProvider, paymentRepository)
+  const paymentFinalizer = new PaymentFinalizer(walletRepository, paymentRepository)
+
+  const paymentProcessingWorker = new BullQueueWorker("payment-processor", paymentProcessor)
+  const paymentFinalizationWorker = new BullQueueWorker("payment-finalizer", paymentFinalizer)
 
 
   const authService = new AuthService(configuration, userRepository)
-  const walletService = new WalletService( walletRepository, paymentProvider)
-  const paymentService = new PaymentService(walletRepository, paymentRepository, paymentQueue)
+  const walletService = new WalletService(walletRepository, paymentProvider)
+  const paymentService = new PaymentService(paymentRepository)
 
   router.use("/auth", authRoutes(authService))
   router.use("/wallet", walletRoutes(authService, walletService))
-  router.use("/payment", paymentRoutes(authService, paymentService))
+  router.use("/payment", paymentRoutes(authService, walletService, paymentService, paymentProcessingQueue, paymentFinalizationQueue))
 
   paymentProviderService.start()
-  paymentWorker.start()
+
+  paymentProcessingWorker.start()
+  paymentFinalizationWorker.start()
 
   return router
 }
