@@ -8,6 +8,12 @@ export interface IPaymentRepository {
   getById(paymentId: string): Promise<Payment | null>
 
   /**
+   * Get the payment by reference
+   * @param reference The reference
+   */
+  getByReference(reference: string): Promise<Payment | null>
+
+  /**
    * Get payments by walletId
    * @param walletId
    */
@@ -19,7 +25,7 @@ export interface IPaymentRepository {
    * @param payment The payment object
    * @returns The payment id
    */
-  create(payment: Payment): Promise<Payment>
+  create(payment: Payment): Promise<string>
 
   /**
    * Update the payment

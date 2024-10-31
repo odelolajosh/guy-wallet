@@ -1,12 +1,11 @@
-import { Currency, Money } from "../common/money";
-import { WalletStatus } from "./wallet-status";
+import { Currency, Money } from "../common/money"
+import { WalletStatus } from "./wallet-status"
 
 type CreateWalletParams = {
-  userId: string;
-  currency: Currency;
-  accountNumber: string;
-  bankName: string;
-  reference: string;
+  userId: string
+  currency: Currency
+  accountNumber: string
+  bankName: string
 }
 
 /**
@@ -20,7 +19,6 @@ export class Wallet {
     public userId: string,
     public accountNumber: string,
     public bankName: string,
-    public reference: string,
     public status: WalletStatus = WalletStatus.ACTIVE,
     public createdAt: Date = new Date(),
     public updatedAt: Date = new Date()
@@ -31,8 +29,7 @@ export class Wallet {
     currency,
     accountNumber,
     bankName,
-    reference,
   }: CreateWalletParams): Wallet {
-    return new Wallet("", currency, new Money(currency), userId, accountNumber, bankName, reference);
+    return new Wallet("", currency, new Money(currency), userId, accountNumber, bankName)
   }
 }
