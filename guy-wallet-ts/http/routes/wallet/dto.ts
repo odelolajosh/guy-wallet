@@ -1,7 +1,7 @@
 import { Currency } from '@/domain/common/money';
 import { z } from 'zod';
 
-const currencySchema = z.enum([Currency.USD, Currency.EUR])
+const currencySchema = z.nativeEnum(Currency, { message: 'Invalid currency' })
 
 export const createWalletSchema = z.object({
   currency: currencySchema,
@@ -37,20 +37,21 @@ export const getWalletByIdResponseSchema = singleWalletResponseSchema
 
 export type GetWalletByIdResponseDTO = z.infer<typeof getWalletByIdResponseSchema>
 
-export const initializeTransferRequestSchema = z.object({
-  destinationType: z.literal('wallet'),
-  walletId: z.string(),
-}).or(
-  z.object({
-    destinationType: z.literal('bank'),
-    accountNumber: z.string(),
-    bankName: z.string(),
-  })
-).and(
-  z.object({
-    amount: z.number(),
-    currency: currencySchema,
-  })
-)
+export const walletsResponseSchema = z.object({
+  wallets: z.array(walletResponseSchema),
+})
 
-export type InitializeTransferRequestDTO = z.infer<typeof initializeTransferRequestSchema>
+export type GetWalletsResponseDTO = z.infer<typeof walletsResponseSchema>
+
+export const getPaymentsResponseSchema = z.object({
+  payments: z.array(z.object({
+    id: z.string(),
+    amount: z.number(),
+    currency: z.string(),
+    status: z.string(),
+    description: z.string(),
+    createdAt: z.string(),
+  }))
+})
+
+export type GetPaymentResponse = z.infer<typeof getPaymentsResponseSchema>

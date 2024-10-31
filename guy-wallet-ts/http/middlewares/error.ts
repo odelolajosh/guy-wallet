@@ -7,5 +7,5 @@ export function handleError(err: Error, request: Request, response: Response, ne
     return
   }
 
-  response.status(500).json({ message: "Internal server error" })
+  response.status(500).json({ message: err.message ?? "Internal server error" })
 }

@@ -12,6 +12,9 @@ import { SqlPaymentRepository } from "@/infrastructure/database/sql/repository/s
 import { BullQueue } from "@/infrastructure/queue/bullmq/bull-queue"
 import { PaymentProcessor } from "@/application/payment/payment-processor"
 import { BullQueueWorker } from "@/infrastructure/queue/bullmq/bull-queue-worker"
+import { GuyPaymentService } from "@/infrastructure/services/payment/guy-payment-service"
+import { paymentRoutes } from "./payment/route"
+import { PaymentService } from "@/application/payment/payment-service"
 
 export function createRoutes() {
   const router = Router()
@@ -24,18 +27,23 @@ export function createRoutes() {
   const walletRepository = new SqlWalletRepository(sqlClient)
   const paymentRepository = new SqlPaymentRepository(sqlClient)
 
-  const paymentProvider = new GuyPaymentProvider()
+  const paymentProviderService = new GuyPaymentService(configuration);
+  const paymentProvider = new GuyPaymentProvider(configuration)
 
   const paymentQueue = new BullQueue("payment")
-  const paymentProcessor = new PaymentProcessor()
+  const paymentProcessor = new PaymentProcessor(paymentProvider)
   const paymentWorker = new BullQueueWorker("payment", paymentProcessor)
 
+
   const authService = new AuthService(configuration, userRepository)
-  const walletService = new WalletService(paymentRepository, walletRepository, paymentProvider, paymentQueue)
+  const walletService = new WalletService( walletRepository, paymentProvider)
+  const paymentService = new PaymentService(walletRepository, paymentRepository, paymentQueue)
 
   router.use("/auth", authRoutes(authService))
-  router.use("/wallet", walletRoutes(walletService))
+  router.use("/wallet", walletRoutes(authService, walletService))
+  router.use("/payment", paymentRoutes(authService, paymentService))
 
+  paymentProviderService.start()
   paymentWorker.start()
 
   return router

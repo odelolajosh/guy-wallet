@@ -1,15 +1,14 @@
 import { routeHandler } from "@/http/lib/route-handler"
 import { Request, Response } from "@/http/types/http"
-import { CreateWalletDto, CreateWalletResponseDTO, WalletParamsDto, GetWalletByIdResponseDTO, InitializeTransferRequestDTO, WalletResponseDTO } from "./dto"
+import { CreateWalletDto, CreateWalletResponseDTO, WalletParamsDto, GetWalletByIdResponseDTO, WalletResponseDTO, GetWalletsResponseDTO } from "./dto"
 import { IWalletService } from "@/application/wallet/wallet-interface"
 import { Wallet } from "@/domain/wallet/model"
-import { PaymentParty, PaymentType } from "@/domain/payment/model"
-import { Money } from "@/domain/common/money"
 
 export class WalletController {
   constructor(private walletService: IWalletService) {
     this.createWallet = this.createWallet.bind(this)
     this.getWalletById = this.getWalletById.bind(this)
+    this.getWallets = this.getWallets.bind(this)
   }
 
   @routeHandler
@@ -34,29 +33,13 @@ export class WalletController {
   }
 
   @routeHandler
-  async initializeTransfer(request: Request<InitializeTransferRequestDTO, {}, WalletParamsDto>, response: Response) {
-    const { walletId } = request.params
-    const { destinationType } = request.body
+  async getWallets(request: Request, response: Response<GetWalletsResponseDTO>) {
+    const user = request.user!
+    const wallets = await this.walletService.getWalletsByUserId(user.id)
 
-    let to: PaymentParty;
-
-    if (destinationType == "wallet") {
-      to = {
-        type: "wallet",
-        walletId: request.body.walletId
-      }
-    } else {
-      to = {
-        type: "bank",
-        accountNumber: request.body.accountNumber,
-        bankName: request.body.bankName
-      }
-    }
-
-    const amount = new Money(request.body.currency, request.body.amount)
-    await this.walletService.initializePayment(walletId, to, PaymentType.Debit, amount)
-
-    response.status(200).json({ message: "Payment initialized" })
+    response.status(200).json({
+      wallets: wallets.map(this.toWalletResponse)
+    })
   }
 
   private toWalletResponse(wallet: Wallet): WalletResponseDTO {
