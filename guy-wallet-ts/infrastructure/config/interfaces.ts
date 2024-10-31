@@ -31,6 +31,10 @@ export const configurationSchema = z.object({
   DB_NAME: z.string(),
   DB_PASSWORD: z.string(),
   DB_PORT: z.string(),
+
+  // Guy payment service
+  GUY_PAYMENT_PORT: z.string(),
+  GUY_PAYMENT_WEBHOOK: z.string(),
 })
 
 /**

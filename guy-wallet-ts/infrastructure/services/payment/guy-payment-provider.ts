@@ -1,48 +1,69 @@
-import { IPaymentProvider, PaymentResponse, PaymentVerificationResponse, VirtualAccountDetails } from "@/application/payment/payment-provider";
+import { IPaymentProvider, PaymentResponse, PaymentVerificationResponse, VirtualAccountDetails } from "@/application/payment/payment-provider"
+import { Money } from "@/domain/common/money"
+import { PaymentParty } from "@/domain/payment/model"
+import { IConfiguration } from "@/infrastructure/config/interfaces"
+import axios from "axios"
 
 export class GuyPaymentProvider implements IPaymentProvider {
-  private transactions = new Map<string, PaymentVerificationResponse>();
+  private transactions = new Map<string, PaymentVerificationResponse>()
+  private guyPaymentUrl: string
 
-  async createVirtualAccount(userId: string): Promise<VirtualAccountDetails> {
-    userId; // eslint-disable-line
-    const accountNumber = `123456${Math.floor(Math.random() * 10000)}`;
-    const bankName = "Guy Bank";
-    const reference = `guy-ref-${Date.now()}`;
-
-    return {
-      accountNumber,
-      bankName,
-      reference,
-    };
+  constructor(configuration: IConfiguration) {
+    const port = parseInt(configuration.get("GUY_PAYMENT_PORT"))
+    this.guyPaymentUrl = `http://localhost:${port}`
   }
 
-  async processPayment(amount: number, currency: string, reference: string): Promise<PaymentResponse> {
-    console.log(`Mock: Processing payment of ${amount} ${currency} with reference ${reference}`);
+  async createVirtualAccount(userId: string): Promise<VirtualAccountDetails | null> {
+    try {
+      const response = await axios.post(`${this.guyPaymentUrl}/virtual-accounts`)
+      return response.data
+    } catch (error) {
+      return null
+    }
+  }
 
-    const success = Math.random() > 0.2; // 80% chance of success
-    const transactionId = `mock-tx-${Date.now()}`;
+  async processPayment(to: PaymentParty, amount: Money, reference: string): Promise<PaymentResponse | null> {
+    if (to.type !== "bank") {
+      return null
+    }
 
-    this.transactions.set(transactionId, {
-      status: success ? "success" : "failed",
-      amount,
-      currency,
-      verified: success,
-    });
+    try {
+      const response = await axios.post("http://localhost:3000/transfer", {
+        amount: amount.value,
+        currency: amount.currency,
+        reference,
+        recipient: {
+          accountNumber: to.accountNumber,
+          accountName: to.accountName,
+          bankName: to.bankName,
+        }
+      })
 
-    return {
-      status: success ? "success" : "failed",
-      transactionId,
-    };
+      return {
+        status: "success",
+        amount: response.data.data.amount,
+        currency: response.data.data.currency,
+        reason: response.data.data.reason,
+        createdAt: response.data.data.createdAt,
+        recipient: {
+          accountNumber: response.data.data.recipient.accountNumber,
+          accountName: response.data.data.recipient.accountName,
+          bankName: response.data.data.recipient.bankName,
+        }
+      }
+    } catch (error) {
+      return null
+    }
   }
 
   async verifyTransaction(transactionId: string): Promise<PaymentVerificationResponse> {
-    console.log(`Mock: Verifying transaction ${transactionId}`);
+    console.log(`Mock: Verifying transaction ${transactionId}`)
     
-    const transaction = this.transactions.get(transactionId);
+    const transaction = this.transactions.get(transactionId)
     if (!transaction) {
-      throw new Error(`Mock: Transaction ${transactionId} not found`);
+      throw new Error(`Mock: Transaction ${transactionId} not found`)
     }
 
-    return transaction;
+    return transaction
   }
 }
