@@ -43,7 +43,7 @@ export class SqlPaymentRepository implements IPaymentRepository {
           amount, currency, reference,
           to_type, to_wallet_id, to_bank_name, to_account_name, to_account_number,
           from_type, from_wallet_id, from_bank_name, from_account_name, from_account_number, 
-          status, description
+          status, reason
         ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
         RETURNING id`,
       [
@@ -63,8 +63,8 @@ export class SqlPaymentRepository implements IPaymentRepository {
   async update(payment: Payment): Promise<Payment> {
     const result = await this.client.query(`
       UPDATE payments
-      SET status = $2, updatedAt = $3
-      WHERE id = $1`,
+      SET status = $2, updated_at = $3
+      WHERE id = $1 RETURNING *`,
       [payment.id, payment.status, new Date()]
     )
     return this.toPayment(result.rows[0])
@@ -74,7 +74,7 @@ export class SqlPaymentRepository implements IPaymentRepository {
     return Payment.create({
       id: row.id,
       amount: new Money(row.amount, row.currency),
-      reason: row.description,
+      reason: row.reason,
       reference: row.reference,
       from: PaymentParty.create({
         type: row.from_type,
