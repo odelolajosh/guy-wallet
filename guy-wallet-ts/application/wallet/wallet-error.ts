@@ -17,3 +17,12 @@ export class WalletNotFoundError extends ApplicationError {
     super("Wallet not found", 404)
   }
 }
+
+/**
+ * Thrown when a virtual account creation fails
+ */
+export class VirtualAccountCreationError extends ApplicationError {
+  constructor() {
+    super("Couldn't create the wallet", 500)
+  }
+}

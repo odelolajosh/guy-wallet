@@ -1,5 +1,4 @@
 import { Currency, Money } from "@/domain/common/money";
-import { PaymentParty, PaymentType } from "@/domain/payment/model";
 import { Wallet } from "@/domain/wallet/model";
 
 export interface IWalletService {
@@ -21,18 +20,4 @@ export interface IWalletService {
   * @param userId The user id
   */
   getWalletsByUserId(userId: string): Promise<Wallet[]>;
-  
-  /**
-   * Initialize a payment
-   * @param to The payment party
-   * @param type The payment type
-   * @param amount The amount
-   */
-  initializePayment(walletId: string, to: PaymentParty, type: PaymentType, amount: Money): Promise<void>;
-
-  /**
-   * Finalize a payment
-   * @param paymentId The payment id
-   */
-  finalizePayment(paymentId: string): Promise<void>
 }
