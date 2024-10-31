@@ -73,27 +73,6 @@ export class PaymentParty {
       return new PaymentParty("wallet", walletId!)
     }
   }
-
-  /**
-   * Create a new PaymentParty instance from a JSON object
-   * Preferred for type safety
-   * @returns JSON representation of the payment party
-   */
-  toJSON(): PaymentPartyParams {
-    if (this.type === "bank") {
-      return {
-        type: "bank",
-        bankName: this.bankName!,
-        accountNumber: this.accountNumber!,
-        accountName: this.accountName!
-      }
-    } else {
-      return {
-        type: "wallet",
-        walletId: this.walletId!
-      }
-    }
-  }
 }
 
 type CreatePaymentParams = {

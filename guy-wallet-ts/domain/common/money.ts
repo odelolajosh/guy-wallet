@@ -48,4 +48,17 @@ export class Money {
   negate() {
     return new Money(this.currency, -this.value)
   }
+
+  /**
+   * Check if money is less than the other money
+   * @param money Money to compare
+   * @returns True if money is greater than the other money
+   */
+  lessThan(money: Money) {
+    if (this.currency !== money.currency) {
+      throw new Error("Currencies do not match")
+    }
+
+    return this.value < money.value
+  }
 }
