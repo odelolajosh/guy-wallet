@@ -42,4 +42,12 @@ export class WalletService implements IWalletService {
     }
     return wallets
   }
+
+  async getWalletByAccountNumber(accountNumber: string): Promise<Wallet> {
+    const wallet = await this.walletRepository.getByAccountNumber(accountNumber)
+    if (!wallet) {
+      throw new WalletNotFoundError()
+    }
+    return wallet
+  }
 }

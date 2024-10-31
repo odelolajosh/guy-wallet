@@ -20,4 +20,10 @@ export interface IWalletService {
   * @param userId The user id
   */
   getWalletsByUserId(userId: string): Promise<Wallet[]>;
+
+  /**
+   * Get the wallet by account number
+   * @param accountNumber 
+   */
+  getWalletByAccountNumber(accountNumber: string): Promise<Wallet>;
 }
