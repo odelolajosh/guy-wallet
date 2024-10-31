@@ -1,13 +1,15 @@
-import { AuthService, IAuthService } from '@/application/services/auth-service'
+import { AuthService } from '@/application/auth/auth-service'
 import { beforeAll, describe, expect, it } from 'vitest'
 import { TestConfiguration } from '../mocks/test-configuration'
 import { TestUserRepository } from '../mocks/user-repository'
+import { IAuthService } from '@/application/auth/auth-interface'
 
 describe('AuthService', () => {
   let authService: IAuthService
 
-  const email = 'test@gmail.com'
-  const password = 'password'
+  const name = 'Guy Fieri'
+  const email = 'guy@gmail.com'
+  const password = 'GuYf!Er1'
   let accessToken: string
 
   beforeAll(() => {
@@ -27,7 +29,7 @@ describe('AuthService', () => {
   })
 
   it('should register a new, non-existent user', async () => {
-    const user = await authService.register(email, password)
+    const user = await authService.register(name, email, password)
     expect(user).toHaveProperty('id')
     expect(user).toHaveProperty('email', email)
     expect(user).toHaveProperty('password')
@@ -45,7 +47,7 @@ describe('AuthService', () => {
   })
 
   it('should fail to register an already existing user', async () => {
-    await expect(() => authService.register(email, password)).rejects.toThrowError(/exist/i)
+    await expect(() => authService.register(name, email, password)).rejects.toThrowError(/exist/i)
   });
 
   it('should fail to login with invalid credentials', async () => {
