@@ -11,7 +11,7 @@ export class PaymentService implements IPaymentService {
     return this.paymentRepository.getByWalletId(walletId)
   }
 
-  async createPendingPayment({ from, to, amount, type, reason = "Payment" }: {
+  async createPayment({ from, to, amount, type, reason = "Payment" }: {
     from: PaymentParty;
     to: PaymentParty;
     type: PaymentType;

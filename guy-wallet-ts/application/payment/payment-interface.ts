@@ -17,7 +17,7 @@ export interface IPaymentService {
    * @param amount The amount
    * @returns The payment
    */
-  createPendingPayment(params: {
+  createPayment(params: {
     from: PaymentParty;
     to: PaymentParty;
     type: PaymentType;

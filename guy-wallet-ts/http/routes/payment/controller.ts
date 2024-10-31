@@ -43,7 +43,7 @@ export class PaymentController {
 
     const amount = new Money(request.body.currency, request.body.amount)
 
-    const payment = await this.paymentService.createPendingPayment({ from, to, type: PaymentType.Transfer, amount })
+    const payment = await this.paymentService.createPayment({ from, to, type: PaymentType.Transfer, amount })
     if (to.type === "bank") {
       // Transfer is to a bank account, so we need to process the payment
       await this.paymentProcessingQueue.enqueue(payment.id, payment)
@@ -76,7 +76,7 @@ export class PaymentController {
       const to = new PaymentParty("wallet", wallet.id)
       const from = new PaymentParty("bank", transfer.senderBankName, transfer.senderAccountNumber, transfer.senderAccountName)
       const amount = new Money(transfer.currency as Currency, transfer.amount)
-      payment = await this.paymentService.createPendingPayment({ from, to, type: PaymentType.Transfer, amount, reason: transfer.reason })
+      payment = await this.paymentService.createPayment({ from, to, type: PaymentType.Transfer, amount, reason: transfer.reason })
     } else {
       // We don't have enough information to process this transfer
       throw new InvalidPaymentPartyError()
