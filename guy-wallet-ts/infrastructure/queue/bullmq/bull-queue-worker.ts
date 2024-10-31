@@ -33,11 +33,11 @@ export class BullQueueJob<T> implements IQueueJob<T> {
 export class BullQueueWorker<T> implements IQueueWorker<T> {
   private worker: Worker<T>;
 
-  constructor(queueName: string, processor: IQueueWorkerProcessor<T>, opts?: WorkerOptions) {
+  constructor(queueName: string, processor: IQueueWorkerProcessor<T>) {
     this.worker = new Worker(queueName, async (job: Job<T>) => {
       const queueJob = new BullQueueJob(job);
       await processor.process(queueJob);
-    }, opts);
+    }, {  connection: { host: 'localhost', port: 6379,  }});
 
     this.worker.on('completed', async (job: Job<T>) => {
       const queueJob = new BullQueueJob(job);
@@ -55,7 +55,9 @@ export class BullQueueWorker<T> implements IQueueWorker<T> {
   }
 
   async start(): Promise<void> {
-    await this.worker.run();
+    if (!this.worker.isRunning()) {
+      await this.worker.run();
+    }
   }
 
   async stop(): Promise<void> {
