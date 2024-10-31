@@ -1,9 +1,10 @@
-import { Payment, PaymentStatus } from "@/domain/payment/model";
+import { Payment, PaymentParty, PaymentStatus } from "@/domain/payment/model";
 import { IQueueJob, IQueueWorkerProcessor } from "../queue/queue-interface";
 import { IPaymentProvider } from "./payment-provider";
 import { IWalletRepository } from "@/domain/wallet/repository";
 import { IPaymentRepository } from "@/domain/payment/repository";
 import { InvalidPaymentPartyError } from "./payment-error";
+import { Money } from "@/domain/common/money";
 
 /**
  * @class PaymentProcessor
@@ -42,17 +43,33 @@ export class PaymentFinalizer implements IQueueWorkerProcessor<Payment> {
   async process(job: IQueueJob<Payment>): Promise<void> {
     const payment = job.data
 
-    const from = payment.from.toJSON(), to = payment.to.toJSON()
+    const from = PaymentParty.create({
+      type: payment.from.type,
+      walletId: payment.from.walletId,
+      bankName: payment.from.bankName,
+      accountNumber: payment.from.accountNumber,
+      accountName: payment.from.accountName
+    })
+
+    const to = PaymentParty.create({
+      type: payment.to.type,
+      walletId: payment.to.walletId,
+      bankName: payment.to.bankName,
+      accountNumber: payment.to.accountNumber,
+      accountName: payment.to.accountName
+    })
+
+    const amount = new Money(payment.amount.currency, payment.amount.value)
 
     if (from.type == "wallet" && to.type == "wallet") {
       // Transfer between wallets
-      await this.walletRepository.transferMoney(from.walletId, to.walletId, payment.amount)
+      await this.walletRepository.transferMoney(from.walletId!, to.walletId!, amount)
     } else if (from.type == "wallet" && to.type == "bank") {
       // Withdraw from wallet
-      await this.walletRepository.updateBalance(from.walletId, payment.amount.negate())
+      await this.walletRepository.updateBalance(from.walletId!, amount.negate())
     } else if (from.type == "bank" && to.type == "wallet") {
       // Deposit to wallet
-      await this.walletRepository.updateBalance(to.walletId, payment.amount)
+      await this.walletRepository.updateBalance(to.walletId!, amount)
     } else {
       throw new InvalidPaymentPartyError()
     }

@@ -23,7 +23,7 @@ export function paymentRoutes(
   router.post("/:walletId/transfer", requireAuth(authService), requireBody(initializeTransferSchema), controller.initializeTransfer)
 
   // Webhook for guy payment provider
-  router.post("/provider/guy", requireAuth(authService), controller.guyHandler)
+  router.post("/provider/guy", controller.guyHandler)
 
   return router
 }

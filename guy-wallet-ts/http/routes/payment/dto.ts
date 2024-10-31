@@ -47,7 +47,7 @@ export const guyWebhookSchema = z.object({
     amount: z.number(),
     currency: z.string(),
     verified: z.boolean(),
-    reference: z.string(),
+    reference: z.string().optional(),
     reason: z.string().optional(),
     senderBankName: z.string(),
     senderAccountNumber: z.string(),

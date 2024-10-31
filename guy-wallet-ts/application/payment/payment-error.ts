@@ -26,3 +26,12 @@ export class InvalidPaymentPartyError extends ApplicationError {
     super("Invalid payment party", 400)
   }
 }
+
+/**
+ * Throw this error when payment is invalid
+ */
+export class InvalidPaymentError extends ApplicationError {
+  constructor() {
+    super("Invalid payment", 400)
+  }
+}

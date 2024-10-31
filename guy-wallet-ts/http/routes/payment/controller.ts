@@ -6,7 +6,8 @@ import { Currency, Money } from "@/domain/common/money"
 import { IPaymentService } from "@/application/payment/payment-interface"
 import { IQueue } from "@/application/queue/queue-interface"
 import { IWalletService } from "@/application/wallet/wallet-interface"
-import { AlreadyFinalizedPaymentError, InvalidPaymentPartyError } from "@/application/payment/payment-error"
+import { AlreadyFinalizedPaymentError, InvalidPaymentError, InvalidPaymentPartyError } from "@/application/payment/payment-error"
+import { InsufficientBalanceError } from "@/application/wallet/wallet-error"
 
 export class PaymentController {
   constructor(
@@ -43,6 +44,11 @@ export class PaymentController {
 
     const amount = new Money(request.body.currency, request.body.amount)
 
+    const wallet = await this.walletService.getWalletById(walletId)
+    if (wallet.balance.lessThan(amount)) {
+      throw new InsufficientBalanceError()
+    }
+    
     const payment = await this.paymentService.createPayment({ from, to, type: PaymentType.Transfer, amount })
     if (to.type === "bank") {
       // Transfer is to a bank account, so we need to process the payment
@@ -73,6 +79,10 @@ export class PaymentController {
     } else if (transfer.receiverAccountNumber) {
       // An external transfer from a bank account to a wallet
       const wallet = await this.walletService.getWalletByAccountNumber(transfer.receiverAccountNumber)
+      if (wallet.balance.currency !== transfer.currency) {
+        // We can't process this transfer because the currency is not supported
+        throw new InvalidPaymentError()
+      }
       const to = new PaymentParty("wallet", wallet.id)
       const from = new PaymentParty("bank", transfer.senderBankName, transfer.senderAccountNumber, transfer.senderAccountName)
       const amount = new Money(transfer.currency as Currency, transfer.amount)
