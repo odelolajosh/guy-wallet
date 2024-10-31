@@ -10,24 +10,25 @@ export interface IPaymentService {
   getPaymentsByWalletId(walletId: string): Promise<Payment[]>;
 
   /**
-   * Initialize a payment
+   * Create a payment
+   * @param from The payment party
    * @param to The payment party
    * @param type The payment type
    * @param amount The amount
+   * @returns The payment
    */
-  initializeTransfer(walletId: string, to: PaymentParty, type: PaymentType, amount: Money): Promise<Payment>;
+  createPendingPayment(params: {
+    from: PaymentParty;
+    to: PaymentParty;
+    type: PaymentType;
+    amount: Money;
+    reason?: string;
+  }): Promise<Payment>;
 
   /**
-   * Finalize a payment by reference
+   * Get payment by reference
    * @param reference The payment reference
-   * @param status The payment status
+   * @returns The payment
    */
-  finalizePayment(reference: string, status: PaymentStatus): Promise<void>;
-
-  /**
-   * Receive payment to wallet through bank transfer
-   * @param recipientAccountNumber The receipient account number
-   * @param amount The amount
-   */
-  receivePayment(recipientAccountNumber: string, amount: Money): Promise<void>;
+  getPaymentByReference(reference: string): Promise<Payment>;
 }
