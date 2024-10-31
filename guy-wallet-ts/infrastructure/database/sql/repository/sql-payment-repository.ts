@@ -14,21 +14,33 @@ export class SqlPaymentRepository implements IPaymentRepository {
     return this.toPayment(result.rows[0])
   }
 
-  async getByWalletId(walletId: string): Promise<Payment[]> {
-    return []
+  async getByReference(reference: string): Promise<Payment | null> {
+    const result = await this.client.query("SELECT * FROM payments WHERE reference = $1", [reference])
+    if (result.rowCount == 0) {
+      return null
+    }
+    return this.toPayment(result.rows[0])
   }
 
-  async create(payment: Payment): Promise<Payment> {
+  async getByWalletId(walletId: string): Promise<Payment[]> {
+    const result = await this.client.query(`
+      SELECT * FROM payments
+      WHERE to_wallet_id = $1 OR from_wallet_id = $1`
+      , [walletId])
+    return result.rows.map(this.toPayment)
+  }
+
+  async create(payment: Payment): Promise<string> {
     const getPartyValues = (party: PaymentParty) => {
       return party.type === "bank"
         ? [party.type, null, party.bankName, party.accountName, party.accountNumber]
-        : [party.type, party.walletId, null, null, null];
+        : [party.type, party.walletId, null, null, null]
     };
 
     const result = await this.client.query(
       `
         INSERT INTO payments (
-          amount, currency,
+          amount, currency, reference,
           to_type, to_wallet_id, to_bank_name, to_account_name, to_account_number,
           from_type, from_wallet_id, from_bank_name, from_account_name, from_account_number, 
           status, description
@@ -37,14 +49,15 @@ export class SqlPaymentRepository implements IPaymentRepository {
       [
         payment.amount.value,
         payment.amount.currency,
+        payment.reference,
         ...getPartyValues(payment.to),
         ...getPartyValues(payment.from),
         payment.status,
-        payment.description,
+        payment.reason,
       ]
-    );
+    )
 
-    return this.toPayment(result.rows[0])
+    return result.rows[0].id
   }
 
   async update(payment: Payment): Promise<Payment> {
@@ -61,21 +74,22 @@ export class SqlPaymentRepository implements IPaymentRepository {
     return Payment.create({
       id: row.id,
       amount: new Money(row.amount, row.currency),
-      description: row.description,
-      from: {
+      reason: row.description,
+      reference: row.reference,
+      from: PaymentParty.create({
         type: row.from_type,
         walletId: row.from_wallet_id,
         bankName: row.from_bank_name,
         accountName: row.from_account_name,
         accountNumber: row.from_account_number
-      },
-      to: {
+      }),
+      to: PaymentParty.create({
         type: row.to_type,
         walletId: row.to_wallet_id,
         bankName: row.to_bank_name,
         accountName: row.to_account_name,
         accountNumber: row.to_account_number
-      },
+      }),
       type: row.type,
       status: row.status,
       createdAt: row.created_at,

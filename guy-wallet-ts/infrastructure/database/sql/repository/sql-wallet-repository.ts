@@ -29,10 +29,11 @@ export class SqlWalletRepository implements IWalletRepository {
 
   async create(wallet: Wallet): Promise<string> {
     const result = await this.client.query(`
-      INSERT INTO wallets (id, name, amount, balance, user_id, account_number, bank_name, reference, created_at, updated_at)
-      VALUES ($1, $2, $3, $4, $5, $6)`,
-      [wallet.id, wallet.name, wallet.balance.value, wallet.balance.currency, wallet.userId,
-      wallet.accountNumber, wallet.bankName, wallet.reference, wallet.createdAt, wallet.updatedAt]
+      INSERT INTO wallets (name, balance, currency, user_id, account_number, bank_name, created_at, updated_at)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      RETURNING id`,
+      [wallet.name, wallet.balance.value, wallet.balance.currency, wallet.userId,
+      wallet.accountNumber, wallet.bankName, wallet.createdAt, wallet.updatedAt]
     )
     return result.rows[0].id
   }
@@ -89,7 +90,6 @@ export class SqlWalletRepository implements IWalletRepository {
       row.user_id,
       row.account_number,
       row.bank_name,
-      row.reference,
       row.status,
       new Date(row.created_at),
       new Date(row.updated_at)

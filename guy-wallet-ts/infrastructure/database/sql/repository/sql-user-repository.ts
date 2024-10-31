@@ -24,7 +24,8 @@ export class SqlUserRepository implements IUserRepository {
   async create(user: User): Promise<string> {
     const result = await this.client.query(
       `INSERT INTO users (name, email, password, created_at)
-       VALUES ($2, $3, $4, $5)`,
+       VALUES ($1, $2, $3, $4)
+       RETURNING id`,
       [user.name, user.email, user.password, user.createdAt]
     );
     return result.rows[0].id;
