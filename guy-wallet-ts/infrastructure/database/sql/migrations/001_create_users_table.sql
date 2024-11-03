@@ -77,4 +77,10 @@ CREATE TABLE IF NOT EXISTS payments (
   )
 );
 
+CREATE INDEX idx_wallets_user_id ON wallets(user_id);
+
+CREATE INDEX idx_payments_wallet_ids ON payments(from_wallet_id, to_wallet_id);
+
+CREATE INDEX idx_users_id ON users(id);
+
 COMMIT;

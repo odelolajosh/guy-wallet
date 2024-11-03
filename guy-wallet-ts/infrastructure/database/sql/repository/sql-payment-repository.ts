@@ -14,6 +14,16 @@ export class SqlPaymentRepository implements IPaymentRepository {
     return this.toPayment(result.rows[0])
   }
 
+  async getByUserId(userId: string): Promise<Payment[]> {
+    const result = await this.client.query(`
+      SELECT p.*, u.name AS user_name FROM payments p
+      JOIN wallets w ON (p.from_wallet_id = w.id OR p.to_wallet_id = w.id)
+      WHERE w.user_id = $1`,
+      [userId]
+    )
+    return result.rows.map(this.toPayment)
+  }
+
   async getByReference(reference: string): Promise<Payment | null> {
     const result = await this.client.query("SELECT * FROM payments WHERE reference = $1", [reference])
     if (result.rowCount == 0) {
@@ -73,7 +83,7 @@ export class SqlPaymentRepository implements IPaymentRepository {
   private toPayment(row: any): Payment {
     return Payment.create({
       id: row.id,
-      amount: new Money(row.amount, row.currency),
+      amount: new Money(row.currency, row.amount),
       reason: row.reason,
       reference: row.reference,
       from: PaymentParty.create({
