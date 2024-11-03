@@ -19,7 +19,8 @@ export function paymentRoutes(
   const router = Router()
   const controller = new PaymentController(walletService, paymentService, paymentProcessingQueue, paymentFinalizationQueue)
 
-  router.get("/:walletId", requireAuth(authService), controller.getPayments)
+  router.get("/", requireAuth(authService), controller.getPayments)
+  router.get("/:walletId", requireAuth(authService), controller.getWalletPayments)
   router.post("/:walletId/transfer", requireAuth(authService), requireBody(initializeTransferSchema), controller.initializeTransfer)
 
   // Webhook for guy payment provider
