@@ -1,4 +1,4 @@
-import { File, Flag, Home, PieChart, Wallet } from "lucide-react"
+import { Cog, File, Flag, Gift, Home, PieChart, Wallet } from "lucide-react"
 
 import {
   Sidebar,
@@ -10,12 +10,15 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarSeparator,
 } from "@/components/ui/sidebar"
 import { NavLink } from "react-router-dom"
 import { cn } from "@/lib/utils"
+import { GitHubLogoIcon } from "@radix-ui/react-icons"
+import { SwitchThemeButton } from "./switch-theme"
 
 // Menu items.
-const items = [
+const generalItems = [
   {
     title: "Overview",
     url: "",
@@ -43,6 +46,27 @@ const items = [
   },
 ]
 
+const acquisitionItems = [
+  {
+    title: "Referrals",
+    url: "/referrals",
+    icon: Gift,
+  },
+  {
+    title: "Settings",
+    url: "/settings",
+    icon: Cog,
+  }
+]
+
+const linksItems = [
+  {
+    title: "Get code",
+    url: "http://github.com/odelolajosh/guy-wallet",
+    icon: GitHubLogoIcon
+  }
+]
+
 export function AppSidebar() {
   return (
     <Sidebar>
@@ -53,10 +77,10 @@ export function AppSidebar() {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>General</SidebarGroupLabel>
+          <SidebarGroupLabel>GENERAL</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
+              {generalItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <NavLink to={item.url}>
                     {({ isActive }) => (
@@ -72,6 +96,54 @@ export function AppSidebar() {
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>ACQUISITION</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {acquisitionItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <NavLink to={item.url}>
+                    {({ isActive }) => (
+                      <SidebarMenuButton asChild isActive={isActive}>
+                        <span>
+                          <item.icon className={cn(isActive && "text-tertiary")} />
+                          <span>{item.title} {isActive}</span>
+                        </span>
+                      </SidebarMenuButton>
+                    )}
+                  </NavLink>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup className="mt-auto">
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {linksItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <NavLink to={item.url}>
+                    {({ isActive }) => (
+                      <SidebarMenuButton asChild isActive={isActive}>
+                        <span>
+                          <item.icon className={cn(isActive && "text-tertiary")} />
+                          <span>{item.title} {isActive}</span>
+                        </span>
+                      </SidebarMenuButton>
+                    )}
+                  </NavLink>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarSeparator />
+        <SidebarGroup className="gap-4">
+          <SwitchThemeButton />
+          <small className="text-muted-foreground">
+            &copy; 2024 Guy Wallet. All rights reserved.
+          </small>
         </SidebarGroup>
       </SidebarContent>
     </Sidebar>
