@@ -16,7 +16,7 @@ export class SqlPaymentRepository implements IPaymentRepository {
 
   async getByUserId(userId: string): Promise<Payment[]> {
     const result = await this.client.query(`
-      SELECT p.*, u.name AS user_name FROM payments p
+      SELECT p.* FROM payments p
       JOIN wallets w ON (p.from_wallet_id = w.id OR p.to_wallet_id = w.id)
       WHERE w.user_id = $1`,
       [userId]
