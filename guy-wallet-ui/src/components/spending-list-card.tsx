@@ -1,46 +1,60 @@
-import React from "react";
+import React, { useMemo } from "react";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { CreditCard, Music, User, UtensilsCrossed } from "lucide-react";
+import { ArrowDown, User } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { formatRelative } from 'date-fns'
+import { Payment, usePayments } from "@/data/payments/get-payments";
+import { Link } from "react-router-dom";
 
-const spendings = [
-  { icon: User, category: "transfer", name: "Simon Pegg", date: new Date("2021-09-01:6:30"), amount: +44 },
-  { icon: Music, category: "subscription", name: "Spotify", date: new Date("2021-09-01:12:00"), amount: -9.99 },
-  { icon: UtensilsCrossed, category: "restaurant", name: "McDonald's", date: new Date("2021-09-01:18:00"), amount: -5.18 },
-  { icon: CreditCard, category: "transfer", name: "Mastercard", date: new Date("2021-09-01:20:00"), amount: +13 },
-  { icon: User, category: "transfer", name: "Guy", date: new Date("2021-09-01:6:30"), amount: +13 },
-];
+const SpendingRow = ({ spending }: { spending: Payment }) => {
 
-export const ListOfSpendingCard = React.forwardRef<
+  const name = useMemo(() => {
+    if (spending.from.type === 'wallet') {
+      return spending.from.walletId
+    }
+    return spending.from.accountName
+  }, [spending.from])
+
+  return (
+    <Link to={`/spending/${spending.id}`} className="block">
+      <div className="flex items-center gap-2 py-2 px-3 transition-colors hover:bg-muted rounded-lg">
+        <span className="size-8 rounded-full bg-neutral text-white grid place-items-center">
+          <User className="size-4" />
+        </span>
+        <div className="grid">
+          <div className="font-medium leading-4">{name}</div>
+          <small className="capitalize text-xs text-muted-foreground">{formatRelative(new Date(spending.createdAt), new Date())}</small>
+        </div>
+        <div className="grid ml-auto text-right">
+          <span className="flex items-center gap-1">
+            <ArrowDown className="size-5 text-destructive" />
+            {/* <ArrowUp className="size-5 text-tertiary" /> */}
+            <span className="flex items-center">₦{spending.amount}</span>
+          </span>
+        </div>
+      </div>
+    </Link>
+  )
+}
+
+export const SpendingListCard = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => {
+  const { data: payments = [] } = usePayments();
+
   return (
     <Card ref={ref} {...props} className={cn("flex flex-col", className)}>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-lg">List of spendings</CardTitle>
+      <CardHeader>
+        <CardTitle>List of spendings</CardTitle>
       </CardHeader>
-      <CardContent className="flex-1">
-        {spendings.map((spending, index) => (
-          <div key={index} className="flex items-center gap-2 py-2">
-            <span className="size-6 grid place-items-center">
-              <spending.icon className="size-4" />
-            </span>
-            <div className="grid">
-              <div>{spending.name}</div>
-              <small className="capitalize text-xs text-muted-foreground">{new Date(spending.date).toLocaleString()}</small>
-            </div>
-            <div className="grid ml-auto text-right">
-              <span>{spending.amount}</span>
-              <small className="capitalize text-xs text-muted-foreground">{spending.category}</small>
-            </div>
-          </div>
-        ))}
+      <CardContent className="flex-1 px-3 gap-1">
+        {payments.map((spending) => <SpendingRow key={spending.id} spending={spending} />)}
       </CardContent>
     </Card>
   )
