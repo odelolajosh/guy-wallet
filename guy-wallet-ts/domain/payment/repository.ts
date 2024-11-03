@@ -1,6 +1,13 @@
 import { Payment } from "./model";
 
 export interface IPaymentRepository {
+
+  /**
+   * Get payments by user id
+   * @param userId The user id
+   */
+  getByUserId(userId: string): Promise<Payment[]>
+
   /**
    * Get the payment by id
    * @param paymentId The payment id

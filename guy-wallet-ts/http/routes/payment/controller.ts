@@ -1,6 +1,6 @@
 import { routeHandler } from "@/http/lib/route-handler"
 import { Request, Response } from "@/http/types/http"
-import { GuyWebhookRequestDto, InitializeTransferDTO, PaymentResponse, WalletParamsDto } from "./dto"
+import { GuyWebhookRequestDto, InitializeTransferDTO, PaymentResponse, PaymentsResponse, WalletParamsDto } from "./dto"
 import { Payment, PaymentParty, PaymentStatus, PaymentType } from "@/domain/payment/model"
 import { Currency, Money } from "@/domain/common/money"
 import { IPaymentService } from "@/application/payment/payment-interface"
@@ -17,17 +17,28 @@ export class PaymentController {
     private paymentFinalizationQueue: IQueue<Payment>
   ) {
     this.getPayments = this.getPayments.bind(this)
+    this.getWalletPayments = this.getWalletPayments.bind(this)
     this.initializeTransfer = this.initializeTransfer.bind(this)
     this.guyHandler = this.guyHandler.bind(this)
   }
 
   @routeHandler
-  async getPayments(request: Request<{}, {}, WalletParamsDto>, response: Response) {
+  async getPayments(request: Request, response: Response<PaymentsResponse>) {
+    const { id } = request.user!
+
+    const payments = await this.paymentService.getPaymentByUserId(id)
+    response.json({
+      payments: payments.map(this.toPaymentResponse)
+    })
+  }
+
+  @routeHandler
+  async getWalletPayments(request: Request<{}, {}, WalletParamsDto>, response: Response<PaymentsResponse>) {
     const { walletId } = request.params
 
     const payments = await this.paymentService.getPaymentsByWalletId(walletId)
     response.json({
-      payments
+      payments: payments.map(this.toPaymentResponse)
     })
   }
 
@@ -105,7 +116,21 @@ export class PaymentController {
       currency: payment.amount.currency,
       status: payment.status,
       reason: payment.reason,
-      createdAt: payment.createdAt.toISOString(),
+      to: {
+        type: payment.to.type,
+        walletId: payment.to.walletId,
+        accountNumber: payment.to.accountNumber,
+        bankName: payment.to.bankName,
+        accountName: payment.to.accountName
+      },
+      from: {
+        type: payment.from.type,
+        walletId: payment.from.walletId,
+        accountNumber: payment.from.accountNumber,
+        bankName: payment.from.bankName,
+        accountName: payment.from.accountName
+      },
+      createdAt: payment.createdAt.toISOString()
     }
   }
 }

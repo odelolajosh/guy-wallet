@@ -45,8 +45,8 @@ export function createRoutes() {
   const paymentService = new PaymentService(paymentRepository)
 
   router.use("/auth", authRoutes(authService))
-  router.use("/wallet", walletRoutes(authService, walletService))
-  router.use("/payment", paymentRoutes(authService, walletService, paymentService, paymentProcessingQueue, paymentFinalizationQueue))
+  router.use("/wallets", walletRoutes(authService, walletService))
+  router.use("/payments", paymentRoutes(authService, walletService, paymentService, paymentProcessingQueue, paymentFinalizationQueue))
 
   paymentProviderService.start()
 

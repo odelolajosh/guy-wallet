@@ -13,6 +13,8 @@ const walletResponseSchema = z.object({
   id: z.string(),
   currency: z.string(),
   balance: z.number(),
+  accountNumber: z.string(),
+  bankName: z.string(),
   createdAt: z.string(),
   status: z.string(),
 })

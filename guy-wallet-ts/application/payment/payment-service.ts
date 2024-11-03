@@ -7,6 +7,10 @@ import { PaymentNotFoundError } from "./payment-error"
 export class PaymentService implements IPaymentService {
   constructor(private paymentRepository: IPaymentRepository) { }
 
+  async getPaymentByUserId(userId: string): Promise<Payment[]> {
+    return this.paymentRepository.getByUserId(userId)
+  }
+
   async getPaymentsByWalletId(walletId: string): Promise<Payment[]> {
     return this.paymentRepository.getByWalletId(walletId)
   }

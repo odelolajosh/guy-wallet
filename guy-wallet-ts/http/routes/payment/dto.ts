@@ -28,18 +28,36 @@ export const initializeTransferSchema = z.object({
 
 export type InitializeTransferDTO = z.infer<typeof initializeTransferSchema>
 
+const paymentPartySchema = z.object({
+  type: z.string(),
+  walletId: z.string().optional(),
+  accountNumber: z.string().optional(),
+  bankName: z.string().optional(),
+  accountName: z.string().optional(),
+})
+
+const paymentSchema = z.object({
+  id: z.string(),
+  amount: z.number(),
+  currency: currencySchema,
+  status: z.string(),
+  reason: z.string(),
+  to: paymentPartySchema,
+  from: paymentPartySchema,
+  createdAt: z.string().or(z.date()),
+})
+
 export const paymentResponseSchema = z.object({
-  payment: z.object({
-    id: z.string(),
-    amount: z.number(),
-    currency: z.string(),
-    status: z.string(),
-    reason: z.string(),
-    createdAt: z.string(),
-  })
+  payment: paymentSchema
 })
 
 export type PaymentResponse = z.infer<typeof paymentResponseSchema>
+
+export const paymentsResponseSchema = z.object({
+  payments: z.array(paymentSchema)
+})
+
+export type PaymentsResponse = z.infer<typeof paymentsResponseSchema>
 
 export const guyWebhookSchema = z.object({
   transfer: z.object({

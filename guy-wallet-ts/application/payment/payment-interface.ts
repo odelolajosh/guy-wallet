@@ -3,6 +3,13 @@ import { Payment, PaymentParty, PaymentStatus, PaymentType } from "@/domain/paym
 
 export interface IPaymentService {
   /**
+   * Get payment by user id
+   * @param userId The user id
+   * @returns The payments
+   */
+  getPaymentByUserId(userId: string): Promise<Payment[]>;
+  
+  /**
    * Get payments by wallet id
    * @param walletId The wallet id
    * @returns The payments
