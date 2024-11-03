@@ -1,11 +1,10 @@
-import { IPaymentProvider, PaymentResponse, PaymentVerificationResponse, VirtualAccountDetails } from "@/application/payment/payment-provider"
+import { IPaymentProvider, PaymentResponse, VirtualAccountDetails } from "@/application/payment/payment-provider"
 import { Money } from "@/domain/common/money"
 import { PaymentParty } from "@/domain/payment/model"
 import { IConfiguration } from "@/infrastructure/config/interfaces"
 import axios from "axios"
 
 export class GuyPaymentProvider implements IPaymentProvider {
-  private transactions = new Map<string, PaymentVerificationResponse>()
   private guyPaymentUrl: string
 
   constructor(configuration: IConfiguration) {
@@ -56,14 +55,12 @@ export class GuyPaymentProvider implements IPaymentProvider {
     }
   }
 
-  async verifyTransaction(transactionId: string): Promise<PaymentVerificationResponse> {
-    console.log(`Mock: Verifying transaction ${transactionId}`)
-    
-    const transaction = this.transactions.get(transactionId)
-    if (!transaction) {
-      throw new Error(`Mock: Transaction ${transactionId} not found`)
+  async verifyTransaction(transactionId: string): Promise<PaymentResponse> {
+    try {
+      const response = await axios.get(`${this.guyPaymentUrl}/transactions/${transactionId}`)
+      return response.data
+    } catch (error) {
+      throw new Error("Transaction not found")
     }
-
-    return transaction
   }
 }

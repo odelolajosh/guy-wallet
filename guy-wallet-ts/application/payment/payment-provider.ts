@@ -20,7 +20,7 @@ export interface IPaymentProvider {
    * Verifies a transaction
    * @param transactionId The transaction identifier
    */
-  verifyTransaction(reference: string): Promise<PaymentVerificationResponse>;
+  verifyTransaction(reference: string): Promise<PaymentResponse>;
 }
 
 // Types for responses
@@ -41,11 +41,4 @@ export interface PaymentResponse {
     bankName: string;
   };
   createdAt: Date;
-}
-
-export interface PaymentVerificationResponse {
-  status: string; // e.g., 'success', 'pending', or 'failed'
-  amount: number;
-  currency: string;
-  verified: boolean;
 }
