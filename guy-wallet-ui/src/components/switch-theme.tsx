@@ -2,15 +2,18 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSepar
 import { Button } from "./ui/button";
 import { Theme, useTheme } from "@/hooks/use-theme";
 import { LaptopMinimal, Moon, Sun } from "lucide-react";
+import { forwardRef } from "react";
+import { cn } from "@/lib/utils";
 
-export const SwitchThemeButton = () => {
+export const SwitchThemeButton = forwardRef<HTMLButtonElement, React.ComponentProps<typeof Button>>((props, ref) => {
   const { theme, setTheme } = useTheme();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button size="icon" variant="ghost">
+        <Button size="sm" variant="ghost" ref={ref} {...props} className={cn("justify-start p-2 gap-2", props.className)}>
           {theme === Theme.LIGHT ? <Sun className="w-5 h-5" /> : theme === Theme.DARK ? <Moon className="w-5 h-5" /> : <LaptopMinimal className="w-5 h-5" />}
+          {theme === Theme.LIGHT ? "Light" : theme === Theme.DARK ? "Dark" : "System"}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
@@ -37,4 +40,4 @@ export const SwitchThemeButton = () => {
       </DropdownMenuContent>
     </DropdownMenu>
   )
-}
+})
