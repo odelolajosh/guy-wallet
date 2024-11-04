@@ -1,4 +1,3 @@
-import axios from "./axios";
 import { storage } from "./storage"
 
 type Session = {
@@ -11,15 +10,16 @@ export const createSession = ({ accessToken, refreshToken, expiresAt }: Session)
   storage.set('accessToken', accessToken);
   storage.set('refreshToken', refreshToken);
   storage.set('expiresAt', expiresAt);
-
-  axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
 }
 
 export const deleteSession = async () => {
   storage.remove('accessToken');
   storage.remove('refreshToken');
+}
 
-  delete axios.defaults.headers.common['Authorization'];
+export const updateSession = async ({ accessToken, expiresAt }: Omit<Session, 'refreshToken'>) => {
+  storage.set('accessToken', accessToken);
+  storage.set('expiresAt', expiresAt);
 }
 
 export const getSession = async () => {
@@ -35,6 +35,5 @@ export const getSession = async () => {
     return null;
   }
 
-  axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
   return { accessToken, refreshToken, expiresAt };
 }
