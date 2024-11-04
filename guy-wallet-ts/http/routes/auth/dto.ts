@@ -30,6 +30,12 @@ export type LoginResponseDto = z.infer<typeof loginResponseSchema>;
 
 export type RegisterResponseDto = LoginResponseDto;
 
+export const refreshRequestSchema = z.object({
+  refreshToken: z.string(),
+});
+
+export type RefreshRequestDto = z.infer<typeof refreshRequestSchema>;
+
 export const oauthRequestQuerySchema = z.object({
   code: z.string(),
   state: z.string(),

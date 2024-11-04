@@ -12,6 +12,7 @@ export function authRoutes(authService: IAuthService) {
   router.get("/me", requireAuth(authService), controller.getMe)
   router.post("/login", requireBody(loginRequestSchema), controller.loginWithEmailAndPassword)
   router.post("/register", requireBody(registerRequestSchema), controller.registerWithEmailAndPassword)
+  router.post("/refresh", controller.refreshAccessToken)
   router.post("/google", controller.generateGoogleOAuthURL)
   router.post("/google/callback", requireQuery(oauthRequestQuerySchema), controller.loginWithGoogle)
 

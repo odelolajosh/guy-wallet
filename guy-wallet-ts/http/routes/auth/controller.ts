@@ -1,5 +1,5 @@
 import { IAuthService } from "@/application/auth/auth-interface";
-import { LoginRequestDto, LoginResponseDto, OAuthRequestQuery, RegisterRequestDto, RegisterResponseDto } from "./dto";
+import { LoginRequestDto, LoginResponseDto, OAuthRequestQuery, RefreshRequestDto, RegisterRequestDto, RegisterResponseDto } from "./dto";
 import { Request, Response } from "../../types/http";
 import { routeHandler } from "@/http/lib/route-handler";
 
@@ -8,6 +8,7 @@ export class AuthController {
     this.getMe = this.getMe.bind(this)
     this.loginWithEmailAndPassword = this.loginWithEmailAndPassword.bind(this)
     this.registerWithEmailAndPassword = this.registerWithEmailAndPassword.bind(this)
+    this.refreshAccessToken = this.refreshAccessToken.bind(this)
     this.generateGoogleOAuthURL = this.generateGoogleOAuthURL.bind(this)
     this.loginWithGoogle = this.loginWithGoogle.bind(this)
   }
@@ -75,6 +76,13 @@ export class AuthController {
         createdAt: new Date(user.createdAt).toISOString()
       }
     })
+  }
+
+  @routeHandler
+  async refreshAccessToken(request: Request<RefreshRequestDto>, response: Response) {
+    const { refreshToken } = request.body
+    const accessToken = await this.authService.refreshAccessToken(refreshToken)
+    response.status(200).json({ accessToken })
   }
 
   /**
