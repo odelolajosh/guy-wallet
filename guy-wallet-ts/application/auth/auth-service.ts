@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken"
 import { User } from "@/domain/user/model"
 import { IUserRepository } from "@/domain/user/repository"
 import { IConfiguration } from "@/infrastructure/config/interfaces"
-import { EmailAlreadyExistError, InvalidEmailOrPasswordError, InvalidOrExpiredOAuthError, UserNotFoundError } from "./auth-error"
+import { EmailAlreadyExistError, InvalidAccessTokenError, InvalidEmailOrPasswordError, InvalidOrExpiredOAuthError, InvalidRefreshTokenError, UserNotFoundError } from "./auth-error"
 import { OAuthFactory, OAuthProvider } from "@/infrastructure/services/oauth/oauth-factory"
 import { IAuthService } from "./auth-interface"
 
@@ -50,17 +50,36 @@ export class AuthService implements IAuthService {
     }
   }
 
-  async verifyAccessToken(token: string) {
+  async verifyAccessToken(token: string): Promise<User> {
     try {
       const payload = jwt.verify(token, this.configuration.get("JWT_ACCESS_SECRET")) as jwt.JwtPayload
       const userId = payload.sub
       if (!userId) {
-        return null
+        throw new InvalidAccessTokenError()
       }
 
-      return this.userRepository.findById(userId)
+      const user = await this.userRepository.findById(userId)
+      if (!user) {
+        throw new UserNotFoundError()
+      }
+
+      return user
     } catch (error) {
-      return null
+      throw new InvalidAccessTokenError
+    }
+  }
+
+  async refreshAccessToken(refreshToken: string): Promise<string> {
+    try {
+      const payload = jwt.verify(refreshToken, this.configuration.get("JWT_REFRESH_SECRET")) as jwt.JwtPayload
+      const userId = payload.sub
+      if (!userId) {
+        throw new InvalidRefreshTokenError()
+      }
+
+      return this.generateAccessToken(userId)
+    } catch (error) {
+      throw new InvalidRefreshTokenError()
     }
   }
 

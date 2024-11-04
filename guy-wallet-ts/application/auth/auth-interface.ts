@@ -39,7 +39,14 @@ export interface IAuthService {
    * @param token - Access token to verify
    * @returns The user if the token is valid, null otherwise
    */
-  verifyAccessToken(token: string): Promise<User | null>;
+  verifyAccessToken(token: string): Promise<User>;
+
+  /**
+   * Generates an access token
+   * @param userId - The user's ID
+   * @returns The access token
+   */
+  refreshAccessToken(refreshToken: string): Promise<string>
 
   /**
    * Generates an OAuth URL for a provider

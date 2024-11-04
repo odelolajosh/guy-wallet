@@ -36,3 +36,21 @@ export class UserNotFoundError extends ApplicationError {
     super("User not found", 404)
   }
 }
+
+/**
+ * Thrown when the an invalid refresh token is provided
+ */
+export class InvalidRefreshTokenError extends ApplicationError {
+  constructor() {
+    super("Invalid refresh token", 400)
+  }
+}
+
+/**
+ * Thrown when the an invalid access token is provided
+ */
+export class InvalidAccessTokenError extends ApplicationError {
+  constructor() {
+    super("Invalid access token", 401)
+  }
+}
