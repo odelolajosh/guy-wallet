@@ -1,32 +1,19 @@
 /* eslint-disable react-refresh/only-export-components */
 import { Fallback } from '@/components/fallback';
-import { Spinner } from '@/components/ui/spinner';
-import { AuthLoader } from '@/lib/auth';
+import { PlainLayout } from '@/components/layout/plain-layout';
+import { Authenticate } from '@/lib/auth';
 import { lazyImport } from '@/lib/lazy-import';
-import { Suspense, type PropsWithChildren } from 'react';
+import { type PropsWithChildren } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 
 const Public: React.FC<PropsWithChildren> = ({ children }) => {
   return (
-    <AuthLoader
+    <Authenticate
       renderLoading={() => <Fallback className="min-h-screen" />}
       renderUnauthenticated={() => <>{children}</>}
     >
       <Navigate to="/" />
-    </AuthLoader>
-  );
-};
-
-const App = () => {
-  const fallback = (
-    <div className="h-screen w-full flex items-center justify-center">
-      <Spinner />
-    </div>
-  );
-  return (
-    <Suspense fallback={fallback}>
-      <Outlet />
-    </Suspense>
+    </Authenticate>
   );
 };
 
@@ -38,7 +25,9 @@ export const publicRoutes = [
   {
     element: (
       <Public>
-        <App />
+        <PlainLayout>
+          <Outlet />
+        </PlainLayout>
       </Public>
     ),
     children: [

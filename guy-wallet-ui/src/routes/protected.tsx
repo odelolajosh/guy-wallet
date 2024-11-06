@@ -1,53 +1,38 @@
-import { AppSidebar } from '@/components/app-sidebar';
 import { Fallback } from '@/components/fallback';
-import { SidebarProvider } from '@/components/ui/sidebar';
-import { AuthLoader } from '@/lib/auth';
+import { AppLayout } from '@/components/layout/app-layout';
+import { Authenticate } from '@/lib/auth';
 import { lazyImport } from '@/lib/lazy-import';
-import { Suspense } from 'react';
-import { Navigate, Outlet, ScrollRestoration, useLocation } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
 const Protected = ({ children }: { children: React.ReactNode }) => {
   const { pathname, search } = useLocation();
   const from = `${pathname}${search}`;
 
   return (
-    <AuthLoader
+    <Authenticate
       renderLoading={() => <Fallback className="min-h-screen" />}
       renderUnauthenticated={() => <Navigate to="/login" state={{ from }} />}
     >
       {children}
-    </AuthLoader>
-  );
-};
-
-const App = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <SidebarProvider>
-      <AppSidebar />
-      <main className="w-full">
-        {/* <SidebarTrigger /> */}
-        <Suspense fallback={<Fallback className="min-h-screen" />}>
-          {children}
-          <ScrollRestoration />
-        </Suspense>
-      </main>
-    </SidebarProvider>
+    </Authenticate>
   );
 };
 
 const { Home } = lazyImport(() => import('@/pages/home'), 'Home');
+const { Wallet } = lazyImport(() => import('@/pages/wallet'), 'Wallet');
 
 export const protectedRoutes = [
   {
     element: (
       <Protected>
-        <App>
+        <AppLayout>
           <Outlet />
-        </App>
+        </AppLayout>
       </Protected>
     ),
     children: [
       { index: true, element: <Home /> },
+      { path: 'wallet', element: <Wallet /> },
     ]
   },
 ];
