@@ -1,20 +1,23 @@
 import { routeHandler } from "@/http/lib/route-handler"
 import { Request, Response } from "@/http/types/http"
 import { GuyWebhookRequestDto, InitializeTransferDTO, PaymentResponse, PaymentsResponse, WalletParamsDto } from "./dto"
-import { Payment, PaymentParty, PaymentStatus, PaymentType } from "@/domain/payment/payment"
-import { Currency, Money } from "@/domain/common/money"
+import { Payment } from "@/domain/payment/payment"
+import { Currency, Money } from "@/domain/values/money"
 import { IPaymentService } from "@/application/payment/payment-interface"
 import { IQueue } from "@/application/queue/queue-interface"
 import { IWalletService } from "@/application/wallet/wallet-interface"
 import { AlreadyFinalizedPaymentError, InvalidPaymentError, InvalidPaymentPartyError } from "@/application/payment/payment-error"
 import { InsufficientBalanceError } from "@/application/wallet/wallet-error"
+import { PaymentParty } from "@/domain/payment/payment-party"
+import { PaymentStatus, PaymentType } from "@/domain/payment/payment-enums"
+import { PaymentData, PaymentMapper } from "@/application/payment/payment-mapper"
 
 export class PaymentController {
   constructor(
     private walletService: IWalletService,
     private paymentService: IPaymentService,
-    private paymentProcessingQueue: IQueue<Payment>,
-    private paymentFinalizationQueue: IQueue<Payment>
+    private paymentProcessingQueue: IQueue<PaymentData>,
+    private paymentFinalizationQueue: IQueue<PaymentData>
   ) {
     this.getPayments = this.getPayments.bind(this)
     this.getWalletPayments = this.getWalletPayments.bind(this)
@@ -61,12 +64,13 @@ export class PaymentController {
     }
     
     const payment = await this.paymentService.createPayment({ from, to, type: PaymentType.Transfer, amount })
+    const paymentData = PaymentMapper.toData(payment)
     if (to.type === "bank") {
       // Transfer is to a bank account, so we need to process the payment
-      await this.paymentProcessingQueue.enqueue(payment.id, payment)
+      await this.paymentProcessingQueue.enqueue(payment.id, paymentData)
     } else {
       // This is an internal transfer, so we can finalize the payment immediately!
-      await this.paymentFinalizationQueue.enqueue(payment.id, payment)
+      await this.paymentFinalizationQueue.enqueue(payment.id, paymentData)
     }
 
     response.status(200).json({
@@ -90,7 +94,7 @@ export class PaymentController {
     } else if (transfer.receiverAccountNumber) {
       // An external transfer from a bank account to a wallet
       const wallet = await this.walletService.getWalletByAccountNumber(transfer.receiverAccountNumber)
-      if (wallet.balance.currencyCode !== transfer.currency) {
+      if (wallet.balance.currency !== transfer.currency) {
         // We can't process this transfer because the currency is not supported
         throw new InvalidPaymentError()
       }
@@ -103,7 +107,8 @@ export class PaymentController {
       throw new InvalidPaymentPartyError()
     }
 
-    await this.paymentFinalizationQueue.enqueue(payment.id, payment)
+    const paymentData = PaymentMapper.toData(payment)
+    await this.paymentFinalizationQueue.enqueue(payment.id, paymentData)
     response.status(200).json({
       message: "Payment processing initiated successfully"
     })

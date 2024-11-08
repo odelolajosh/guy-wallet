@@ -47,7 +47,7 @@ export class WalletController {
       id: wallet.id,
       status: wallet.status,
       balance: wallet.balance.toString(),
-      currency: wallet.balance.currencyCode,
+      currency: wallet.balance.currency,
       accountNumber: wallet.accountNumber,
       bankName: wallet.bankName,
       createdAt: new Date(wallet.createdAt).toISOString()

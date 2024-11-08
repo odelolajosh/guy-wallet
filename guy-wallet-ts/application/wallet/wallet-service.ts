@@ -3,7 +3,7 @@ import { Wallet } from "@/domain/wallet/model"
 import { IWalletService } from "./wallet-interface"
 import { IPaymentProvider } from "../payment/payment-provider"
 import { VirtualAccountCreationError, WalletNotFoundError } from "./wallet-error"
-import { Currency } from "@/domain/common/money"
+import { Currency } from "@/domain/values/money"
 
 export class WalletService implements IWalletService {
   constructor(

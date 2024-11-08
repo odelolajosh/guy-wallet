@@ -1,7 +1,8 @@
-import { Payment, PaymentParty } from "@/domain/payment/payment";
+import { Payment } from "@/domain/payment/payment";
+import { PaymentParty } from "@/domain/payment/payment-party";
 import { IPaymentRepository } from "@/domain/payment/repository";
 import { PostgresClient } from "../postgres";
-import { Money } from "@/domain/common/money";
+import { Money } from "@/domain/values/money";
 
 export class SqlPaymentRepository implements IPaymentRepository {
   constructor(private client: PostgresClient) { }

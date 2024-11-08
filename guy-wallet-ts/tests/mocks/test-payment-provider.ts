@@ -1,5 +1,5 @@
 import { IPaymentProvider, PaymentResponse, VirtualAccountDetails } from "@/application/payment/payment-provider";
-import { Money } from "@/domain/common/money";
+import { Money } from "@/domain/values/money";
 import { PaymentParty } from "@/domain/payment/payment";
 
 export class TestPaymentProvider implements IPaymentProvider {
@@ -23,7 +23,7 @@ export class TestPaymentProvider implements IPaymentProvider {
     const payment: PaymentResponse = {
       status: "success",
       amount: money.toNumber(),
-      currency: money.currencyCode,
+      currency: money.currency,
       reason: "Payment processed successfully",
       createdAt: new Date(),
       recipient: {

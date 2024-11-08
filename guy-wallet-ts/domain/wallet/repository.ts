@@ -1,4 +1,4 @@
-import { Money } from "../common/money";
+import { Money } from "../values/money";
 import { Wallet } from "./model";
 
 /**

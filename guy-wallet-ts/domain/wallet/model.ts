@@ -1,4 +1,4 @@
-import { Currency, Money } from "../common/money"
+import { Currency, Money } from "../values/money"
 import { WalletStatus } from "./wallet-status"
 
 type CreateWalletParams = {

@@ -1,6 +1,6 @@
 import { Wallet } from "@/domain/wallet/model";
 import { IWalletRepository } from "@/domain/wallet/repository";
-import { Money } from "@/domain/common/money";
+import { Money } from "@/domain/values/money";
 import { PostgresClient } from "../postgres";
 
 export class SqlWalletRepository implements IWalletRepository {
@@ -32,7 +32,7 @@ export class SqlWalletRepository implements IWalletRepository {
       INSERT INTO wallets (name, balance, currency, user_id, account_number, bank_name, created_at, updated_at)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
       RETURNING id`,
-      [wallet.name, wallet.balance.toNumber(), wallet.balance.currencyCode, wallet.userId,
+      [wallet.name, wallet.balance.toNumber(), wallet.balance.currency, wallet.userId,
       wallet.accountNumber, wallet.bankName, wallet.createdAt, wallet.updatedAt]
     )
     return result.rows[0].id

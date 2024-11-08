@@ -1,4 +1,4 @@
-import { Money } from "@/domain/common/money"
+import { Money } from "@/domain/values/money"
 import { Wallet } from "@/domain/wallet/model"
 import { IWalletRepository } from "@/domain/wallet/repository"
 

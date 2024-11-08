@@ -1,4 +1,4 @@
-import { Currency, Money } from "@/domain/common/money";
+import { Currency } from "@/domain/values/money";
 import { Wallet } from "@/domain/wallet/model";
 
 export interface IWalletService {

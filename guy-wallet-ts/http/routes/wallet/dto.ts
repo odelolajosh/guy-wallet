@@ -1,4 +1,4 @@
-import { Currency } from '@/domain/common/money';
+import { Currency } from '@/domain/values/money';
 import { z } from 'zod';
 
 const currencySchema = z.nativeEnum(Currency, { message: 'Invalid currency' })

@@ -65,7 +65,7 @@ export class AuthService implements IAuthService {
 
       return user
     } catch (error) {
-      throw new InvalidAccessTokenError
+      throw new InvalidAccessTokenError()
     }
   }
 
