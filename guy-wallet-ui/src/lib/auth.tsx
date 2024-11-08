@@ -2,6 +2,9 @@ import type { LoginCredentialsDTO, RegisterCredentialsDTO, User } from '@/data/a
 import { getMe, loginWithEmailAndPassword, logout, registerWithEmailAndPassword } from '@/data/auth';
 import { configureAuth } from 'react-query-auth';
 import { createSession, deleteSession, getSession } from './session';
+import { QueryKey } from '@tanstack/react-query';
+
+const userKey: QueryKey = ['authenticated-user'];
 
 const userFn = async () => {
   try {
@@ -45,7 +48,9 @@ const logoutFn = async () => {
   deleteSession()
 };
 
+
 const config = {
+  userKey,
   userFn,
   loginFn,
   registerFn,
@@ -60,7 +65,7 @@ export const { useUser, useLogin, useRegister, useLogout } = configureAuth<
   RegisterCredentialsDTO
 >(config);
 
-export function AuthLoader({
+export function Authenticate({
   children,
   renderLoading,
   renderUnauthenticated,

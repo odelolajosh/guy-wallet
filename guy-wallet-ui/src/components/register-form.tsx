@@ -26,7 +26,7 @@ export function RegisterForm() {
   const handleSubmit = form.handleSubmit(async (data) => {
     try {
       await registerMutation.mutateAsync(data);
-      navigate('/');
+      navigate('/create-profile');
     } catch (error) {
       form.setError('email', { message: (error as AxiosError).message });
     }
