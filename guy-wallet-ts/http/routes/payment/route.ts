@@ -6,7 +6,7 @@ import { PaymentController } from "./controller";
 import { IPaymentService } from "@/application/payment/payment-interface";
 import { initializeTransferSchema } from "./dto";
 import { IQueue } from "@/application/queue/queue-interface";
-import { Payment } from "@/domain/payment/model";
+import { Payment } from "@/domain/payment/payment";
 import { IWalletService } from "@/application/wallet/wallet-interface";
 
 export function paymentRoutes(

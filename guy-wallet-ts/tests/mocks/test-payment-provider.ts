@@ -1,6 +1,6 @@
 import { IPaymentProvider, PaymentResponse, VirtualAccountDetails } from "@/application/payment/payment-provider";
 import { Money } from "@/domain/common/money";
-import { PaymentParty } from "@/domain/payment/model";
+import { PaymentParty } from "@/domain/payment/payment";
 
 export class TestPaymentProvider implements IPaymentProvider {
   payments = new Map<string, PaymentResponse>()
@@ -15,15 +15,15 @@ export class TestPaymentProvider implements IPaymentProvider {
     }
   }
 
-  async processPayment(to: PaymentParty, amount: Money, reference: string): Promise<PaymentResponse | null> {
+  async processPayment(to: PaymentParty, money: Money, reference: string): Promise<PaymentResponse | null> {
     if (to.type !== "bank") {
       return null
     }
   
     const payment: PaymentResponse = {
       status: "success",
-      amount: amount.value,
-      currency: amount.currency,
+      amount: money.toNumber(),
+      currency: money.currencyCode,
       reason: "Payment processed successfully",
       createdAt: new Date(),
       recipient: {

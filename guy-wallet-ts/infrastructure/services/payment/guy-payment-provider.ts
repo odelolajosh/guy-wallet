@@ -1,6 +1,6 @@
 import { IPaymentProvider, PaymentResponse, VirtualAccountDetails } from "@/application/payment/payment-provider"
 import { Money } from "@/domain/common/money"
-import { PaymentParty } from "@/domain/payment/model"
+import { PaymentParty } from "@/domain/payment/payment"
 import { IConfiguration } from "@/infrastructure/config/interfaces"
 import axios from "axios"
 
@@ -28,8 +28,8 @@ export class GuyPaymentProvider implements IPaymentProvider {
 
     try {
       const response = await axios.post("http://localhost:3000/transfer", {
-        amount: amount.value,
-        currency: amount.currency,
+        amount: amount.toNumber(),
+        currency: amount.currencyCode,
         reference,
         recipient: {
           accountNumber: to.accountNumber,

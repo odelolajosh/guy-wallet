@@ -1,5 +1,5 @@
-import { Money } from "@/domain/common/money";
-import { Payment, PaymentParty, PaymentStatus, PaymentType } from "@/domain/payment/model";
+import { Currency, Money } from "@/domain/common/money";
+import { Payment, PaymentParty, PaymentStatus, PaymentType } from "@/domain/payment/payment";
 
 export interface IPaymentService {
   /**

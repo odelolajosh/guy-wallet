@@ -18,11 +18,12 @@ export class TestUserRepository implements IUserRepository {
     return user.id;
   }
 
-  async update(user: User): Promise<void> {
+  async update(user: User): Promise<User> {
     const index = this.users.findIndex(u => u.id === user.id);
     if (index === -1) {
       throw new Error("User not found");
     }
     this.users[index] = user;
+    return this.users[index];
   }
 }

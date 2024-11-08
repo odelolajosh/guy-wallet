@@ -41,14 +41,14 @@ export interface IWalletRepository {
    * Transfer money between wallets
    * @param fromWalletId The wallet id to transfer from
    * @param toWalletId The wallet id to transfer to
-   * @param amount The amount to transfer
+   * @param money The amount to transfer
    */
-  transferMoney(fromWalletId: string, toWalletId: string, amount: Money): Promise<boolean>
+  transferMoney(fromWalletId: string, toWalletId: string, money: Money): Promise<boolean>
 
   /**
-   * Update the wallet balance
+   * Fund the wallet
    * @param walletId The wallet id
-   * @param amountChange The amount to change
+   * @param money The amount to change
    */
-  updateBalance(walletId: string, amountChange: Money): Promise<boolean>
+  fundWallet(walletId: string, money: Money): Promise<boolean>
 }

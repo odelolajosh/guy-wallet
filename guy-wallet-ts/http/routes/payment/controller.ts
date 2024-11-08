@@ -1,7 +1,7 @@
 import { routeHandler } from "@/http/lib/route-handler"
 import { Request, Response } from "@/http/types/http"
 import { GuyWebhookRequestDto, InitializeTransferDTO, PaymentResponse, PaymentsResponse, WalletParamsDto } from "./dto"
-import { Payment, PaymentParty, PaymentStatus, PaymentType } from "@/domain/payment/model"
+import { Payment, PaymentParty, PaymentStatus, PaymentType } from "@/domain/payment/payment"
 import { Currency, Money } from "@/domain/common/money"
 import { IPaymentService } from "@/application/payment/payment-interface"
 import { IQueue } from "@/application/queue/queue-interface"
@@ -90,7 +90,7 @@ export class PaymentController {
     } else if (transfer.receiverAccountNumber) {
       // An external transfer from a bank account to a wallet
       const wallet = await this.walletService.getWalletByAccountNumber(transfer.receiverAccountNumber)
-      if (wallet.balance.currency !== transfer.currency) {
+      if (wallet.balance.currencyCode !== transfer.currency) {
         // We can't process this transfer because the currency is not supported
         throw new InvalidPaymentError()
       }
@@ -112,7 +112,7 @@ export class PaymentController {
   private toPaymentResponse(payment: Payment): PaymentResponse["payment"] {
     return {
       id: payment.id,
-      amount: payment.amount.value,
+      amount: payment.amount.toString(),
       currency: payment.amount.currency,
       status: payment.status,
       reason: payment.reason,

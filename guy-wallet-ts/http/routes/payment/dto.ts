@@ -38,7 +38,7 @@ const paymentPartySchema = z.object({
 
 const paymentSchema = z.object({
   id: z.string(),
-  amount: z.number(),
+  amount: z.string(),
   currency: currencySchema,
   status: z.string(),
   reason: z.string(),
@@ -62,7 +62,7 @@ export type PaymentsResponse = z.infer<typeof paymentsResponseSchema>
 export const guyWebhookSchema = z.object({
   transfer: z.object({
     status: z.enum(['success', 'failed']),
-    amount: z.number(),
+    amount: z.string(),
     currency: z.string(),
     verified: z.boolean(),
     reference: z.string().optional(),

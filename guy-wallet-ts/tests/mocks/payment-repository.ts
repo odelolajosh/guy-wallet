@@ -1,4 +1,4 @@
-import { Payment } from "@/domain/payment/model";
+import { Payment } from "@/domain/payment/payment";
 import { IPaymentRepository } from "@/domain/payment/repository";
 
 export class TestPaymentRepository implements IPaymentRepository {
@@ -6,6 +6,10 @@ export class TestPaymentRepository implements IPaymentRepository {
 
   async getById(paymentId: string): Promise<Payment | null> {
     return this.payments.find((payment) => payment.id == paymentId) ?? null
+  }
+
+  async getByUserId(_userId: string): Promise<Payment[]> {
+    return []
   }
 
   async getByReference(reference: string): Promise<Payment | null> {

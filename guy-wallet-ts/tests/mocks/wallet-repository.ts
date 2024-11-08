@@ -39,7 +39,7 @@ export class TestWalletRepository implements IWalletRepository {
     return false
   }
 
-  async updateBalance(walletId: string, amountChange: Money): Promise<boolean> {
+  async fundWallet(walletId: string, amountChange: Money): Promise<boolean> {
     return false
   }
 }

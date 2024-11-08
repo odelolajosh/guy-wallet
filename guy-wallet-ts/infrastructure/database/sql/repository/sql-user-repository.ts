@@ -23,21 +23,23 @@ export class SqlUserRepository implements IUserRepository {
 
   async create(user: User): Promise<string> {
     const result = await this.client.query(
-      `INSERT INTO users (name, email, password, created_at)
+      `INSERT INTO users (name, email, password)
        VALUES ($1, $2, $3, $4)
        RETURNING id`,
-      [user.name, user.email, user.password, user.createdAt]
+      [user.name, user.email, user.password]
     );
     return result.rows[0].id;
   }
 
-  async update(user: User): Promise<void> {
-    await this.client.query(
+  async update(user: User): Promise<User> {
+    const result = await this.client.query(
       `UPDATE users
-       SET name = $2, email = $3, password = $4, created_at = $5
-       WHERE id = $1`,
-      [user.id, user.name, user.email, user.password, user.createdAt]
+       SET name = $2, email = $3, password = $4, avatar_url = $5
+       WHERE id = $1 RETURNING *`,
+      [user.id, user.name, user.email, user.password, user.avatar]
     );
+
+    return this.mapUser(result.rows[0]);
   }
 
   private mapUser(row: any): User {
@@ -46,6 +48,7 @@ export class SqlUserRepository implements IUserRepository {
       row.name,
       row.email,
       row.password,
+      row.avatar_url,
       row.created_at
     )
   }

@@ -19,8 +19,8 @@ describe("WalletService", () => {
     const currency = Currency.USD
     const wallet = await walletService.createWallet(userId, currency)
     expect(wallet.userId).toEqual(userId)
-    expect(wallet.balance.value).toEqual(0)
-    expect(wallet.balance.currency).toEqual(currency)
+    expect(wallet.balance.toNumber()).toEqual(0)
+    expect(wallet.balance.currencyCode).toEqual(currency)
     expect(wallet.accountNumber).not.toBeNull()
     expect(wallet.bankName).not.toBeNull()
   })

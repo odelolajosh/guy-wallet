@@ -7,6 +7,7 @@ export class User {
     public name: string,
     public email: string,
     public password: string, // Hashed password
+    public avatar: string = '', // URL to avatar
     public createdAt: Date = new Date()
   ) { }
 

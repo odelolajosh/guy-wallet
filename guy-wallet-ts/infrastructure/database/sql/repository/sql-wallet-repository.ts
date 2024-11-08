@@ -32,7 +32,7 @@ export class SqlWalletRepository implements IWalletRepository {
       INSERT INTO wallets (name, balance, currency, user_id, account_number, bank_name, created_at, updated_at)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
       RETURNING id`,
-      [wallet.name, wallet.balance.value, wallet.balance.currency, wallet.userId,
+      [wallet.name, wallet.balance.toNumber(), wallet.balance.currencyCode, wallet.userId,
       wallet.accountNumber, wallet.bankName, wallet.createdAt, wallet.updatedAt]
     )
     return result.rows[0].id
@@ -56,12 +56,12 @@ export class SqlWalletRepository implements IWalletRepository {
       
       txClient.query(
         `UPDATE wallets SET balance = balance - $2 WHERE id = $1`,
-        [fromWalletId, amount.value]
+        [fromWalletId, amount.toNumber()]
       )
 
       txClient.query(
         `UPDATE wallets SET balance = balance + $2 WHERE id = $1`,
-        [toWalletId, amount.value]
+        [toWalletId, amount.toNumber()]
       )
 
       await txClient.commit()
@@ -72,12 +72,12 @@ export class SqlWalletRepository implements IWalletRepository {
     }
   }
 
-  async updateBalance(walletId: string, amountChange: Money): Promise<boolean> {
+  async fundWallet(walletId: string, amountChange: Money): Promise<boolean> {
     const result = await this.client.query(`
       UPDATE wallets
       SET balance = balance + $2
       WHERE id = $1`,
-      [walletId, amountChange.value]
+      [walletId, amountChange.toNumber()]
     )
     return !!result.rowCount && result.rowCount > 0
   }

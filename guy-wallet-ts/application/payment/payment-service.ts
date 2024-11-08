@@ -1,6 +1,6 @@
 import { IPaymentRepository } from "@/domain/payment/repository"
 import { IPaymentService } from "./payment-interface"
-import { Payment, PaymentParty, PaymentType } from "@/domain/payment/model"
+import { Payment, PaymentParty, PaymentType } from "@/domain/payment/payment"
 import { Money } from "@/domain/common/money"
 import { PaymentNotFoundError } from "./payment-error"
 

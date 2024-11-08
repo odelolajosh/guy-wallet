@@ -30,5 +30,5 @@ export interface IUserRepository {
    * Updates a user
    * @param user
    */
-  update(user: User): Promise<void>;
+  update(user: User): Promise<User>;
 }
