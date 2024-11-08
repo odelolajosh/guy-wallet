@@ -1,3 +1,4 @@
+import { queryClient } from "./react-query";
 import { storage } from "./storage"
 
 type Session = {
@@ -15,6 +16,10 @@ export const createSession = ({ accessToken, refreshToken, expiresAt }: Session)
 export const deleteSession = async () => {
   storage.remove('accessToken');
   storage.remove('refreshToken');
+  storage.remove('expiresAt');
+
+  // This will cause the page to re-render, and the user will be logged out
+  queryClient.setQueryData(['authenticated-user'], null);
 }
 
 export const updateSession = async ({ accessToken, expiresAt }: Omit<Session, 'refreshToken'>) => {

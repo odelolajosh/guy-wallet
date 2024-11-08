@@ -53,7 +53,6 @@ axios.interceptors.response.use(
 
         if (e.response && e.response.status === 401) {
           deleteSession();
-          window.location.reload();
         }
 
         // suppress original error to throw the new one to get new information
