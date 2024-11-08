@@ -1,8 +1,10 @@
 import { IPaymentRepository } from "@/domain/payment/repository"
 import { IPaymentService } from "./payment-interface"
-import { Payment, PaymentParty, PaymentType } from "@/domain/payment/payment"
-import { Money } from "@/domain/common/money"
+import { Payment } from "@/domain/payment/payment"
+import { Money } from "@/domain/values/money"
 import { PaymentNotFoundError } from "./payment-error"
+import { PaymentParty } from "@/domain/payment/payment-party"
+import { PaymentType } from "@/domain/payment/payment-enums"
 
 export class PaymentService implements IPaymentService {
   constructor(private paymentRepository: IPaymentRepository) { }
