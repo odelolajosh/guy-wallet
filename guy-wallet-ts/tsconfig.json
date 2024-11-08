@@ -23,5 +23,9 @@
     "paths": {
       "@/*": ["*"]
     }
+  },
+  "buildOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
   }
 }
