@@ -1,4 +1,4 @@
-import { Payment, PaymentParty } from "@/domain/payment/model";
+import { Payment, PaymentParty } from "@/domain/payment/payment";
 import { IPaymentRepository } from "@/domain/payment/repository";
 import { PostgresClient } from "../postgres";
 import { Money } from "@/domain/common/money";
@@ -57,7 +57,7 @@ export class SqlPaymentRepository implements IPaymentRepository {
         ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
         RETURNING id`,
       [
-        payment.amount.value,
+        payment.amount.toNumber(),
         payment.amount.currency,
         payment.reference,
         ...getPartyValues(payment.to),
