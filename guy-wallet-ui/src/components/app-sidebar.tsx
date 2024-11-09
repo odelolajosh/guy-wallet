@@ -16,6 +16,7 @@ import { NavLink } from "react-router-dom"
 import { cn } from "@/lib/utils"
 import { GitHubLogoIcon } from "@radix-ui/react-icons"
 import { SwitchThemeButton } from "./switch-theme"
+import { GuyLogo } from "./guy-logo"
 
 // Menu items.
 const generalItems = [
@@ -71,9 +72,9 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader>
-        <h4 className="font-medium uppercase">
-          <span className="text-tertiary">Guy</span> Wallet
-        </h4>
+        <div className="py-3 flex items-center">
+          <GuyLogo showText />
+        </div>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
