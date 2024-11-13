@@ -7,11 +7,13 @@ import {
   CardHeader,
 } from "@/components/ui/card"
 import { ArrowDownLeft, ArrowUpRight, TrendingUp } from "lucide-react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 import { useWallets } from "@/data/wallets/get-wallets";
 import { countries } from "@/data/wallets/countries";
 import { Decimal } from "@/lib/math";
+import { ReceiveMoneyDialog } from "../receive-money-dialog";
+import { SendMoneyDialog } from "./send-money";
 
 export const WalletCard = React.forwardRef<
   HTMLDivElement,
@@ -59,9 +61,19 @@ export const WalletCard = React.forwardRef<
           </div>
         </div>
       </CardContent>
-      <CardFooter className="grid grid-cols-2 gap-2">
-        <Button variant="outline" className="text-tertiary hover:text-tertiary"> <ArrowUpRight /> Send</Button>
-        <Button variant="outline" className="text-tertiary hover:text-tertiary"> <ArrowDownLeft /> Receive</Button>
+      <CardFooter className="grid sm:grid-cols-2 gap-2">
+        <SendMoneyDialog>
+          <Button variant="outline" className="text-tertiary hover:text-tertiary space-x-1">
+            <ArrowUpRight />
+            Send
+          </Button>
+        </SendMoneyDialog>
+        <ReceiveMoneyDialog>
+          <Button variant="outline" className="text-tertiary hover:text-tertiary space-x-1">
+            <ArrowDownLeft />
+            Receive
+          </Button>
+        </ReceiveMoneyDialog>
       </CardFooter>
     </Card>
   )

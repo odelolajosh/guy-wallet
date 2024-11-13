@@ -16,7 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Badge } from "./ui/badge";
+import { Badge } from "../ui/badge";
 
 const SpendingRow = ({ spending }: { spending: Payment }) => {
 

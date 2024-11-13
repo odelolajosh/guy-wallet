@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/card"
 import { cn } from "@/lib/utils";
 import { TrendingUp } from "lucide-react";
-import { Progress } from "./ui/progress";
+import { Progress } from "../ui/progress";
 
 export const MoneyFlowCard = React.forwardRef<
   HTMLDivElement,

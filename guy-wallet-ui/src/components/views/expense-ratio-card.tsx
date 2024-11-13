@@ -5,7 +5,7 @@ import {
   CardDescription,
   CardHeader,
 } from "@/components/ui/card"
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "./ui/chart";
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "../ui/chart";
 import { Label, PolarRadiusAxis, RadialBar, RadialBarChart } from "recharts";
 import { gcd } from "@/lib/math";
 
