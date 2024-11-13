@@ -11,5 +11,6 @@ export const useWallets = () => (
   useQuery({
     queryKey: ["wallets"],
     queryFn: () => getWallets(),
+    refetchInterval: 10 * 1000,
   })
 )

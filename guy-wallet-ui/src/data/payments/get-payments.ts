@@ -33,6 +33,6 @@ export const usePayments = () => (
   useQuery({
     queryKey: ['payments'],
     queryFn: () => getPayments(),
-    refetchInterval: 1000 * 60 * 5, // 5 minutes
+    refetchInterval: 10 * 1000,
   })
 )
